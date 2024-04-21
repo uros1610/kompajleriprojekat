@@ -69,7 +69,11 @@
      TOKEN_WHILE = 285,
      TOKEN_BREAK = 286,
      TOKEN_IF = 287,
-     TOKEN_ELSE = 288
+     TOKEN_ELSE = 288,
+     TOKEN_INTIDENT = 289,
+     TOKEN_STRINGIDENT = 290,
+     TOKEN_BOOLIDENT = 291,
+     TOKEN_DOUBLEIDENT = 292
    };
 #endif
 
@@ -93,7 +97,7 @@ char* ident;
 
 
 /* Line 1676 of yacc.c  */
-#line 97 "prvi.tab.h"
+#line 101 "prvi.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

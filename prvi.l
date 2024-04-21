@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <math.h>
 
 #include "prvi.tab.h"
 
@@ -17,9 +18,13 @@
 \"[^\n\"]*\"                       {char* s; strncpy(s,yytext+1,yyleng-2); s[yyleng-2] = '\0'; printf("%s",s); return TOKEN_STRING;}
 (0|[1-9])[0-9]*                    {yylval.int_value = atoi(yytext); return TOKEN_INT;}
 (0x|0X)(0|[1-9A-Fa-f])[0-9A-Fa-f]* {int val = strtol(yytext+2,NULL,16); yylval.int_value = val; return TOKEN_INT;}
-(0|[1-9])[0-9]*\.[0-9]*            {yylval.dbl_value = strtod(yytext,NULL); return TOKEN_DOUBLE;}
-(0|[1-9])[0-9]*\.[0-9]*E\+[0-9]*   {return TOKEN_DOUBLE;} // treba yylval.dbl_value-u dodijeliti vrijednost
-(0|[1-9])[0-9]*\.[0-9]*E\-[0-9]*   {return TOKEN_DOUBLE;} // treba yylval.dbl_value-u dodijeliti vrijednost
+(0|[1-9])[0-9]*\.[0-9]*            {char* kraj;   yylval.dbl_value = strtod(yytext,&kraj); return TOKEN_DOUBLE;}
+(0|[1-9])[0-9]*\.[0-9]*E\+[0-9]*   {char* kraj; yylval.dbl_value = strtod(yytext,&kraj); return TOKEN_DOUBLE;} 
+
+
+
+
+(0|[1-9])[0-9]*\.[0-9]*E\-[0-9]*   { char* kraj; yylval.dbl_value = strtod(yytext,&kraj); return TOKEN_DOUBLE;} // treba yylval.dbl_value-u dodijeliti vrijednost
 [a-zA-Z][0-9a-zA-Z\_]*             { if(yyleng > 31) {printf("Ne moze duze od 31 karaktera");} yylval.ident = (char*) strdup(yytext); return TOKEN_IDENT;}
 
   
@@ -31,6 +36,10 @@
 "WHILE"                            {return TOKEN_WHILE;}
 "TRUE"                             {return TOKEN_TRUE;}
 "FALSE"                            {return TOKEN_FALSE;}
+"INT"                              {return TOKEN_INTIDENT;}
+"STRING"                           {return TOKEN_STRINGIDENT;}
+"BOOL"                             {return TOKEN_BOOLIDENT;}
+"DOUBLE"                           {return TOKEN_DOUBLEIDENT;}
 
 
 [ \t\r\n]     {}
@@ -56,7 +65,7 @@
 ")"           {return TOKEN_RIGHTPAR;}
 
 "//"                {
-                    printf("usao u komentar");    BEGIN(LINE_COMMENT);
+                    printf("usao u komentar\n");    BEGIN(LINE_COMMENT);
                     }
 
 "/*"                {

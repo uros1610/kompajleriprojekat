@@ -4,4 +4,12 @@
 
 dgfdgf = 7;
 
+// tr = "jsafjafs";
+
+fdksfksds = 43.22;
+
+y = 12.E-6;
+
+fdsdfs = 0x5;
+
 x = 44;
