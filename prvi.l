@@ -22,13 +22,6 @@
 (0|[1-9])[0-9]*\.[0-9]*E\+[0-9]*   {char* kraj; yylval.dbl_value = strtod(yytext,&kraj); return TOKEN_DOUBLE;} 
 
 
-
-
-(0|[1-9])[0-9]*\.[0-9]*E\-[0-9]*   { char* kraj; yylval.dbl_value = strtod(yytext,&kraj); return TOKEN_DOUBLE;} // treba yylval.dbl_value-u dodijeliti vrijednost
-[a-zA-Z][0-9a-zA-Z\_]*             { if(yyleng > 31) {printf("Ne moze duze od 31 karaktera");} yylval.ident = (char*) strdup(yytext); return TOKEN_IDENT;}
-
-  
-
 "IF"                               {return TOKEN_IF;}
 "ELSE"                             {return TOKEN_ELSE;}
 "BREAK"                            {return TOKEN_BREAK;}
@@ -40,6 +33,16 @@
 "STRING"                           {return TOKEN_STRINGIDENT;}
 "BOOL"                             {return TOKEN_BOOLIDENT;}
 "DOUBLE"                           {return TOKEN_DOUBLEIDENT;}
+
+
+
+
+
+(0|[1-9])[0-9]*\.[0-9]*E\-[0-9]*   { char* kraj; yylval.dbl_value = strtod(yytext,&kraj); return TOKEN_DOUBLE;} // treba yylval.dbl_value-u dodijeliti vrijednost
+[a-zA-Z][0-9a-zA-Z\_]*             { if(yyleng > 31) {printf("Ne moze duze od 31 karaktera");} yylval.ident = (char*) strdup(yytext); return TOKEN_IDENT;}
+
+  
+
 
 
 [ \t\r\n]     {}

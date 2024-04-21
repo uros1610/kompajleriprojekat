@@ -288,16 +288,16 @@ static yyconst short int yy_accept[103] =
     {   0,
         0,    0,    0,    0,    0,    0,   48,   47,   19,   35,
        47,   25,   47,   38,   39,   23,   21,   36,   22,   37,
-       24,    2,    2,   20,   26,   30,   28,    7,    7,    7,
-        7,    7,    7,    7,    7,    7,   47,   43,   42,   46,
+       24,    2,    2,   20,   26,   30,   28,   18,   18,   18,
+       18,   18,   18,   18,   18,   18,   47,   43,   42,   46,
        44,   46,   32,    0,    1,   33,   41,   40,    4,    2,
-        0,   27,   31,   29,    7,    7,    7,    7,    7,    7,
-        7,    7,    7,    7,    7,    7,   34,   45,    4,    0,
-        3,    7,    7,    7,    7,    7,    7,    7,    7,    7,
-        7,    5,    6,    3,    7,    7,    7,    7,    7,    7,
-        7,    7,    5,    6,    7,    7,    7,    7,    7,    7,
+        0,   27,   31,   29,   18,   18,   18,   18,   18,   18,
+       18,    6,   18,   18,   18,   18,   34,   45,    4,    0,
+        3,   18,   18,   18,   18,   18,    9,   13,   18,   18,
+       18,    5,   17,    3,   15,   18,   18,    7,   18,   18,
+       11,   18,    5,   17,    8,   18,   12,   18,   10,   16,
 
-        7,    0
+       14,    0
     } ;
 
 static yyconst int yy_ec[256] =
@@ -712,184 +712,184 @@ YY_RULE_SETUP
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 27 "prvi.l"
-{ char* kraj; yylval.dbl_value = strtod(yytext,&kraj); return TOKEN_DOUBLE;} // treba yylval.dbl_value-u dodijeliti vrijednost
+#line 25 "prvi.l"
+{return TOKEN_IF;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 28 "prvi.l"
-{ if(yyleng > 31) {printf("Ne moze duze od 31 karaktera");} yylval.ident = (char*) strdup(yytext); return TOKEN_IDENT;}
+#line 26 "prvi.l"
+{return TOKEN_ELSE;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 32 "prvi.l"
-{return TOKEN_IF;}
+#line 27 "prvi.l"
+{return TOKEN_BREAK;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 33 "prvi.l"
-{return TOKEN_ELSE;}
+#line 28 "prvi.l"
+{return TOKEN_FOR;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 34 "prvi.l"
-{return TOKEN_BREAK;}
+#line 29 "prvi.l"
+{return TOKEN_WHILE;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 35 "prvi.l"
-{return TOKEN_FOR;}
+#line 30 "prvi.l"
+{return TOKEN_TRUE;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 36 "prvi.l"
-{return TOKEN_WHILE;}
+#line 31 "prvi.l"
+{printf("%s\n",yytext); return TOKEN_FALSE;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 37 "prvi.l"
-{return TOKEN_TRUE;}
+#line 32 "prvi.l"
+{return TOKEN_INTIDENT;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 38 "prvi.l"
-{return TOKEN_FALSE;}
+#line 33 "prvi.l"
+{return TOKEN_STRINGIDENT;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 39 "prvi.l"
-{return TOKEN_INTIDENT;}
+#line 34 "prvi.l"
+{return TOKEN_BOOLIDENT;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 40 "prvi.l"
-{return TOKEN_STRINGIDENT;}
+#line 35 "prvi.l"
+{return TOKEN_DOUBLEIDENT;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 41 "prvi.l"
-{return TOKEN_BOOLIDENT;}
+{ char* kraj; yylval.dbl_value = strtod(yytext,&kraj); return TOKEN_DOUBLE;} // treba yylval.dbl_value-u dodijeliti vrijednost
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 42 "prvi.l"
-{return TOKEN_DOUBLEIDENT;}
+{ if(yyleng > 31) {printf("Ne moze duze od 31 karaktera");} yylval.ident = (char*) strdup(yytext); return TOKEN_IDENT;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 45 "prvi.l"
+#line 48 "prvi.l"
 {}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 46 "prvi.l"
+#line 49 "prvi.l"
 {return TOKEN_SC;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 47 "prvi.l"
+#line 50 "prvi.l"
 {return TOKEN_PLUS;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 48 "prvi.l"
+#line 51 "prvi.l"
 {return TOKEN_MINUS;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 49 "prvi.l"
+#line 52 "prvi.l"
 {return TOKEN_MUL;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 50 "prvi.l"
+#line 53 "prvi.l"
 {return TOKEN_DIV;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 51 "prvi.l"
+#line 54 "prvi.l"
 {return TOKEN_MOD;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 52 "prvi.l"
+#line 55 "prvi.l"
 {return TOKEN_LE;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 53 "prvi.l"
+#line 56 "prvi.l"
 {return TOKEN_LEQ;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 54 "prvi.l"
+#line 57 "prvi.l"
 {return TOKEN_GE;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 55 "prvi.l"
+#line 58 "prvi.l"
 {return TOKEN_GEQ;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 56 "prvi.l"
+#line 59 "prvi.l"
 {return TOKEN_EQ;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 57 "prvi.l"
+#line 60 "prvi.l"
 {return TOKEN_ISEQ;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 58 "prvi.l"
+#line 61 "prvi.l"
 {return TOKEN_ISNOTEQ;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 59 "prvi.l"
+#line 62 "prvi.l"
 {return TOKEN_AND;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 60 "prvi.l"
+#line 63 "prvi.l"
 {return TOKEN_OR;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 61 "prvi.l"
+#line 64 "prvi.l"
 {return TOKEN_EXCLAM;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 62 "prvi.l"
+#line 65 "prvi.l"
 {return TOKEN_COMMA;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 63 "prvi.l"
+#line 66 "prvi.l"
 {return TOKEN_DOT;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 64 "prvi.l"
+#line 67 "prvi.l"
 {return TOKEN_LEFTPAR;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 65 "prvi.l"
+#line 68 "prvi.l"
 {return TOKEN_RIGHTPAR;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 67 "prvi.l"
+#line 70 "prvi.l"
 {
                     printf("usao u komentar\n");    BEGIN(LINE_COMMENT);
                     }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 71 "prvi.l"
+#line 74 "prvi.l"
 {
                         BEGIN(MULTILINE_COMMENT);
                     }
@@ -897,35 +897,35 @@ YY_RULE_SETUP
 
 case 42:
 YY_RULE_SETUP
-#line 77 "prvi.l"
+#line 80 "prvi.l"
 { BEGIN(INITIAL);} 
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 78 "prvi.l"
+#line 81 "prvi.l"
 {} 
 	YY_BREAK
 
 
 case 44:
 YY_RULE_SETUP
-#line 82 "prvi.l"
+#line 85 "prvi.l"
 { }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 83 "prvi.l"
+#line 86 "prvi.l"
 {printf("zavrsio sa komentarom"); BEGIN(INITIAL); } 
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 84 "prvi.l"
+#line 87 "prvi.l"
 { } 
 	YY_BREAK
 
 case 47:
 YY_RULE_SETUP
-#line 89 "prvi.l"
+#line 92 "prvi.l"
 ECHO;
 	YY_BREAK
 #line 932 "lex.yy.c"
@@ -1816,4 +1816,4 @@ int main()
 	return 0;
 	}
 #endif
-#line 89 "prvi.l"
+#line 92 "prvi.l"
