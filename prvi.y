@@ -56,6 +56,10 @@ char* ident;
 %token TOKEN_STRINGIDENT
 %token TOKEN_BOOLIDENT
 %token TOKEN_DOUBLEIDENT
+%token TOKEN_RETURN
+%token TOKEN_THIS
+%token TOKEN_LET;
+%token TOKEN_IN;
 
 
 
@@ -70,6 +74,8 @@ char* ident;
 %type <dbl_value>expression2
 %type <dbl_value>stat2
 
+
+
 %%
 
 S: stat   {}
@@ -83,7 +89,7 @@ stat: expression TOKEN_SC {printf("%d\n",$1);}
     | TOKEN_IDENT TOKEN_EQ expression TOKEN_SC {printf("%s %d\n",$1, $3);}
 ;
 
-stat2: expression2 TOKEN_SC {printf("%d\n",$1);}
+stat2: expression2 TOKEN_SC {printf("%f\n",$1);}
     | TOKEN_IDENT TOKEN_EQ expression2 TOKEN_SC {printf("%s %f\n",$1, $3);}
 ;
 
@@ -109,7 +115,6 @@ expression:
     | expression TOKEN_MOD expression           {$$ = $1 % $3;}
     | TOKEN_LEFTPAR expression TOKEN_RIGHTPAR   {$$ = $2;}
     | TOKEN_INT                                 {$$ = $1;}
-    | TOKEN_DOUBLE                              {$$ = $1;}
     | TOKEN_STRING                              {$$ = 0;}
     | TOKEN_FALSE                               {$$ = $1;}
     | TOKEN_TRUE                                {$$ = $1;}
