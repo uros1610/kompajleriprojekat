@@ -17,19 +17,6 @@ int cnt = 1;
 
 %%
 "\n" {cnt++;}
-\"[^\n\"]*\"                                {char* s = malloc(yyleng-1); strncpy(s,yytext+1,yyleng-2); s[yyleng-2] = '\0'; yylval.int_value = 0;  return TOKEN_INT;}
-0|([1-9][0-9]*)                             {yylval.int_value = atoi(yytext); return TOKEN_INT;}
-(0x|0X)(0|([1-9A-Fa-f][0-9A-Fa-f]*))        {int val = strtol(yytext+2,NULL,16); yylval.int_value = val; return TOKEN_INT;}
-(0|([1-9][0-9]*))\.[0-9]*                   {char* kraj;   yylval.dbl_value = strtod(yytext,&kraj); return TOKEN_DOUBLE;}
-(0|([1-9][0-9]*))\.[0-9]*(E|e)\+[0-9]*      {char* kraj;   yylval.dbl_value = strtod(yytext,&kraj); return TOKEN_DOUBLE;} 
-(0|([1-9][0-9]*))\.[0-9]*(E|e)\-[0-9]*      {char* kraj;   yylval.dbl_value = strtod(yytext,&kraj); return TOKEN_DOUBLE;} 
-
-\"[^\n\"]*                                  {printf("greska na liniji %d, nezatvoren string\n",cnt); return;}
-(0|([1-9][0-9]*))(E|e)\+[0-9]*              {printf("greska na liniji %d nema tacke\n",cnt); return;}
-(0|([1-9][0-9]*))(E|e)\-[0-9]*              {printf("greska na liniji %d nema tacke\n",cnt); return;}
-
-
-
 
 "IF"                               {return TOKEN_IF;}
 "ELSE"                             {return TOKEN_ELSE;}
@@ -46,10 +33,27 @@ int cnt = 1;
 "THIS"                             {return TOKEN_THIS;}
 "LET"                              {return TOKEN_LET;}
 "IN"                               {return TOKEN_IN;}
+"READ"                             {return TOKEN_READ}
+"WRITE"                            {return TOKEN_WRITE}
+"END"                              {return TOKEN_END}
+"SKIP"                             {return TOKEN_SKIP}
+
 [a-zA-Z][0-9a-zA-Z\_]*             { if(yyleng > 31) {printf("Ne moze duze od 31 karaktera");} yylval.ident = (char*) strdup(yytext); return TOKEN_IDENT;}
+\"[^\n\"]*\"                                {char* s = malloc(yyleng-1); strncpy(s,yytext+1,yyleng-2); s[yyleng-2] = '\0'; yylval.int_value = 0;  return TOKEN_INT;}
+0|([1-9][0-9]*)                             {yylval.int_value = atoi(yytext); return TOKEN_INT;}
+(0x|0X)(0|([1-9A-Fa-f][0-9A-Fa-f]*))        {int val = strtol(yytext+2,NULL,16); yylval.int_value = val; return TOKEN_INT;}
+(0|([1-9][0-9]*))\.[0-9]*                   {char* kraj;   yylval.dbl_value = strtod(yytext,&kraj); return TOKEN_DOUBLE;}
+(0|([1-9][0-9]*))\.[0-9]*(E|e)\+[0-9]*      {char* kraj;   yylval.dbl_value = strtod(yytext,&kraj); return TOKEN_DOUBLE;} 
+(0|([1-9][0-9]*))\.[0-9]*(E|e)\-[0-9]*      {char* kraj;   yylval.dbl_value = strtod(yytext,&kraj); return TOKEN_DOUBLE;} 
+
+\"[^\n\"]*                                  {printf("greska na liniji %d, nezatvoren string\n",cnt); return;}
+(0|([1-9][0-9]*))(E|e)\+[0-9]*              {printf("greska na liniji %d nema tacke\n",cnt); return;}
+(0|([1-9][0-9]*))(E|e)\-[0-9]*              {printf("greska na liniji %d nema tacke\n",cnt); return;}
+
 
 
 [ \t\r\n]     {}
+"::="         {return TOKEN_DOTSEQ}
 ";"           {return TOKEN_SC;}
 "+"           {return TOKEN_PLUS;}
 "-"           {return TOKEN_MINUS;}

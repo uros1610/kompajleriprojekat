@@ -60,6 +60,11 @@ char* ident;
 %token TOKEN_THIS
 %token TOKEN_LET;
 %token TOKEN_IN;
+%token TOKEN_READ
+%token TOKEN_WRITE
+%token TOKEN_END
+%token TOKEN_SKIP
+%token TOKEN_DOTSEQ
 
 
 
@@ -119,6 +124,7 @@ expression:
     | TOKEN_FALSE                               {$$ = $1;}
     | TOKEN_TRUE                                {$$ = $1;}
     | TOKEN_IDENT                               {$$ = 0;}
+    | TOKEN_EXCLAM                              {$$ = !($1);}
 ;
 
 %%   
