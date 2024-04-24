@@ -124,7 +124,7 @@ expression:
     | TOKEN_FALSE                               {$$ = $1;}
     | TOKEN_TRUE                                {$$ = $1;}
     | TOKEN_IDENT                               {$$ = 0;}
-    | TOKEN_EXCLAM                              {$$ = !($1);}
+    
 ;
 
 %%   
