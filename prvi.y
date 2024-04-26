@@ -67,6 +67,10 @@ char* ident;
 %token TOKEN_DOTSEQ
 %token TOKEN_FWSLASH
 %token TOKEN_FI
+%token TOKEN_INTCONST
+%token TOKEN_STRINGCONST
+%token TOKEN_BOOLCONST
+%token TOKEN_DOUBLECONST
 
 
 
