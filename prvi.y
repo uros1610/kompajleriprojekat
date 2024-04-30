@@ -76,8 +76,11 @@ char* ident;
 
 %left TOKEN_AND TOKEN_OR
 %left TOKEN_LE TOKEN_LEQ TOKEN_GE TOKEN_GEQ
+%nonassoc TOKEN_EQ TOKEN_ISNOTEQ
 %left TOKEN_PLUS TOKEN_MINUS
 %left TOKEN_MUL TOKEN_DIV TOKEN_MOD
+
+
 
 %type <int_value>expression
 %type <int_value>stat
