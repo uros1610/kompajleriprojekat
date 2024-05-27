@@ -1,5 +1,5 @@
 *.txt
 lex.yy.c
-prvi.tab.c
-prvi.tab.h
-skener.exe
+*.c
+*.h
+*.exe
