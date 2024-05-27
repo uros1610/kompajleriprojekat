@@ -1,5 +1,4 @@
 *.txt
 lex.yy.c
-*.c
-*.h
+parser.tab.c
 *.exe
