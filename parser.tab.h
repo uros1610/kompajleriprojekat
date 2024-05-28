@@ -88,7 +88,9 @@
      TOKEN_INTCONST = 304,
      TOKEN_STRINGCONST = 305,
      TOKEN_BOOLCONST = 306,
-     TOKEN_DOUBLECONST = 307
+     TOKEN_DOUBLECONST = 307,
+     TOKEN_DO = 308,
+     TOKEN_THEN = 309
    };
 #endif
 
@@ -99,7 +101,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 54 "parser.y"
+#line 55 "parser.y"
  
 
 int int_value;
@@ -112,7 +114,7 @@ char* ident;
 
 
 /* Line 1676 of yacc.c  */
-#line 116 "parser.tab.h"
+#line 118 "parser.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
