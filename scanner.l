@@ -20,30 +20,32 @@ int column = 1;
 %%
 "\n" {cnt++; column = 1;}
 
-"IF"                               {column+=yyleng; return TOKEN_IF;}
-"ELSE"                             {column+=yyleng; return TOKEN_ELSE;}
-"BREAK"                            {column+=yyleng; return TOKEN_BREAK;}
-"FOR"                              { column+=yyleng; return TOKEN_FOR;}
-"WHILE"                            { column+=yyleng; return TOKEN_WHILE;}
-"TRUE"                             { column+=yyleng; return TOKEN_TRUE;}
-"FALSE"                            { column+=yyleng; return TOKEN_FALSE;}
-"INT"                              { column+=yyleng; return TOKEN_INTIDENT;}
-"STRING"                           { column+=yyleng; return TOKEN_STRINGIDENT;}
-"BOOL"                             { column+=yyleng; return TOKEN_BOOLIDENT;}
-"DOUBLE"                           { column+=yyleng; return TOKEN_DOUBLEIDENT;}
-"RETURN"                           { column+=yyleng; return TOKEN_RETURN;}
-"THIS"                             { column+=yyleng; return TOKEN_THIS;}
-"LET"                              { column+=yyleng; return TOKEN_LET;}
-"IN"                               { column+=yyleng; return TOKEN_IN;}
-"READ"                             { column+=yyleng; return TOKEN_READ;}
-"WRITE"                            { column+=yyleng; return TOKEN_WRITE;}
-"END"                              { column+=yyleng; return TOKEN_END;}
-"SKIP"                             { column+=yyleng; return TOKEN_SKIP;}
-"FI"                               { column+=yyleng; return TOKEN_FI;}
-"INTCONST"                         { column+=yyleng; return TOKEN_INTCONST;}
-"DOUBLECONST"                      { column+=yyleng; return TOKEN_DOUBLECONST;}
-"BOOLCONST"                        { column+=yyleng; return TOKEN_BOOLCONST;}
-"STRINGCONST"                      { column+=yyleng; return TOKEN_STRINGCONST;}
+"IF"                                {column+=yyleng; return TOKEN_IF;}
+"ELSE"                              {column+=yyleng; return TOKEN_ELSE;}
+"BREAK"                             {column+=yyleng; return TOKEN_BREAK;}
+"FOR"                               {column+=yyleng; return TOKEN_FOR;}
+"WHILE"                             {column+=yyleng; return TOKEN_WHILE;}
+"TRUE"                              {column+=yyleng; yylval.bool_value = true; return TOKEN_TRUE;}
+"FALSE"                             {column+=yyleng; yylval.bool_value = false; return TOKEN_FALSE;}
+"INT"                               {column+=yyleng; return TOKEN_INTIDENT;}
+"STRING"                            {column+=yyleng; return TOKEN_STRINGIDENT;}
+"BOOL"                              {column+=yyleng; return TOKEN_BOOLIDENT;}
+"DOUBLE"                            {column+=yyleng; return TOKEN_DOUBLEIDENT;}
+"RETURN"                            {column+=yyleng; return TOKEN_RETURN;}
+"THIS"                              {column+=yyleng; return TOKEN_THIS;}
+"LET"                               {column+=yyleng; return TOKEN_LET;}
+"IN"                                {column+=yyleng; return TOKEN_IN;}
+"READ"                              {column+=yyleng; return TOKEN_READ;}
+"WRITE"                             {column+=yyleng; return TOKEN_WRITE;}
+"END"                               {column+=yyleng; return TOKEN_END;}
+"SKIP"                              {column+=yyleng; return TOKEN_SKIP;}
+"FI"                                {column+=yyleng; return TOKEN_FI;}
+"INTCONST"                          {column+=yyleng; return TOKEN_INTCONST;}
+"DOUBLECONST"                       {column+=yyleng; return TOKEN_DOUBLECONST;}
+"BOOLCONST"                         {column+=yyleng; return TOKEN_BOOLCONST;}
+"STRINGCONST"                       {column+=yyleng; return TOKEN_STRINGCONST;}
+"DO"                                {column+=yyleng; return TOKEN_DO;}
+"THEN"                              {column+=yyleng; return TOKEN_THEN;}
 
 [a-zA-Z][0-9a-zA-Z\_]*                      { column+=yyleng;  if(yyleng > 31) {predugacakIdentifikator(cnt,column,yytext);} yylval.ident = (char*) strdup(yytext); return TOKEN_IDENT;}
 \"[^\n\"]*\"                                { column+=yyleng; char* s = malloc(yyleng-1); strncpy(s,yytext+1,yyleng-2); s[yyleng-2] = '\0'; yylval.str_value = s;  return TOKEN_STRING;}
