@@ -292,7 +292,7 @@ expressionInt:
     | expressionInt TOKEN_DIV expressionInt             {$$ = $1 / $3;}
     | expressionInt TOKEN_MOD expressionInt             {$$ = $1 % $3;}
     | TOKEN_LEFTPAR expressionInt TOKEN_RIGHTPAR        {$$ = $2;}
-    | TOKEN_INT                                         {$$ = $1; printf("%d ",$1);}
+    | TOKEN_INT                                         {$$ = $1;}
     | TOKEN_IDENT                                       {
                                                         $$ = nadji($1)->val;
                                                         }
