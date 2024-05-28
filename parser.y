@@ -49,6 +49,7 @@ void setuj(struct Promjenjiva* p,char* id,int val) {
 
 
 
+
 %}
 
 %union { 
@@ -114,6 +115,8 @@ char* ident;
 %token TOKEN_STRINGCONST
 %token TOKEN_BOOLCONST
 %token TOKEN_DOUBLECONST
+%token TOKEN_DO
+%token TOKEN_THEN
 
 
 
@@ -134,31 +137,81 @@ char* ident;
 
 %type <bool_value>expressionBool
 %type <bool_value>statBool
+%type <bool_value>statBoolSC
+
+%type <bool_value>expressionLE
+%type <bool_value>expressionLEQ
+%type <bool_value>expressionGE
+%type <bool_value>expressionGEQ
+%type <bool_value>expressionISEQ
+%type <bool_value>expressionISNOTEQ
 
 
 %%
 
 
 
-S: | S statInt   {}
-   | S statDouble {}
-   | S statString {}
-   | S statBool {}
-
+S: | S statInt      {}
+   | S statDouble   {}
+   | S statString   {}
+   | S statBool     {}
+   | S statWhile    {}
+   | S statBoolSC   {}
+   | S statIf       {}
 ;
+
 
 statBool:
-
-    expressionBool TOKEN_SC {}
-
-
+    expressionBool          {$$ = $1; printf("%d\n",$1)}
 ;
 
-expressionBool:
-  TOKEN_FALSE                           {$$ = $1}
-| TOKEN_TRUE                            {$$ = $1}
-| TOKEN_IDENT TOKEN_EQ TOKEN_FALSE      {}
-| TOKEN_IDENT TOKEN_EQ TOKEN_TRUE       {}
+statBoolSC:
+    expressionBool TOKEN_SC {$$ = $1; printf("%d\n",$1);}
+;
+
+statIf:
+    TOKEN_IF TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_THEN S TOKEN_ELSE S TOKEN_FI;
+
+
+statWhile:
+
+TOKEN_WHILE TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_DO S TOKEN_END { }
+;
+
+expressionLE:
+        expressionInt TOKEN_LE expressionInt            {$$ = ($1 < $3);}
+|       expressionDouble TOKEN_LE expressionDouble      {$$ = ($1 < $3);}
+|       expressionDouble TOKEN_LE expressionInt         {$$ = ($1 < $3);} 
+|       expressionInt TOKEN_LE expressionDouble         {$$ = ($1 < $3);}
+
+expressionLEQ:
+        expressionInt TOKEN_LEQ expressionInt            {$$ = ($1 <= $3);}
+|       expressionDouble TOKEN_LEQ expressionDouble      {$$ = ($1 <= $3);}
+|       expressionDouble TOKEN_LEQ expressionInt         {$$ = ($1 <= $3);} 
+|       expressionInt TOKEN_LEQ expressionDouble         {$$ = ($1 <= $3);}
+
+
+expressionGE:
+        expressionInt TOKEN_GE expressionInt            {$$ = ($1 > $3);}
+|       expressionDouble TOKEN_GE expressionDouble      {$$ = ($1 > $3);}
+|       expressionDouble TOKEN_GE expressionInt         {$$ = ($1 > $3);} 
+|       expressionInt TOKEN_GE expressionDouble         {$$ = ($1 > $3);}
+
+expressionGEQ:
+        expressionInt TOKEN_GEQ expressionInt            {$$ = ($1 >= $3);}
+|       expressionDouble TOKEN_GEQ expressionDouble      {$$ = ($1 >= $3);}
+|       expressionDouble TOKEN_GEQ expressionInt         {$$ = ($1 >= $3);} 
+|       expressionInt TOKEN_GEQ expressionDouble         {$$ = ($1 >= $3);}
+
+
+expressionISEQ:
+        expressionInt TOKEN_ISEQ expressionInt            {$$ = ($1 == $3);}
+|       expressionDouble TOKEN_ISEQ expressionDouble      {$$ = ($1 == $3);}
+
+
+expressionISNOTEQ:
+        expressionInt TOKEN_ISNOTEQ expressionInt            {$$ = ($1 != $3);}
+|       expressionDouble TOKEN_ISNOTEQ expressionDouble      {$$ = ($1 != $3);}
 
 
 
@@ -180,18 +233,47 @@ statDouble: expressionDouble TOKEN_SC {printf("%f\n",$1);}
    | TOKEN_IDENT TOKEN_EQ expressionDouble TOKEN_SC {}
 ;
 
+expressionBool:
+  TOKEN_FALSE                                                               {$$ = $1;}
+| TOKEN_TRUE                                                                {$$ = $1;}
+| expressionBool TOKEN_LE expressionBool                                    {$$ = ($1 < $3);}
+| expressionBool TOKEN_LEQ expressionBool                                   {$$ = ($1 <= $3);}
+| expressionBool TOKEN_GEQ expressionBool                                   {$$ = ($1 >= $3);}
+| expressionBool TOKEN_GE expressionBool                                    {$$ = ($1 > $3);}
+| expressionBool TOKEN_ISEQ expressionBool                                  {$$ = ($1 == $3);}
+| expressionBool TOKEN_ISNOTEQ expressionBool                               {$$ = ($1 != $3);}
+| expressionGE                                                              {$$ = $1;}
+| expressionGEQ                                                             {$$ = $1;}
+| expressionISEQ                                                            {$$ = $1;}
+| expressionISNOTEQ                                                         {$$ = $1;}
+| expressionLE                                                              {$$ = $1;}
+| expressionLEQ                                                             {$$ = $1;}
+| TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR                               {$$ = $2;}
+| expressionInt TOKEN_LE TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR        {$$ = ($1 < $4);}
+| expressionInt TOKEN_LEQ TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR       {$$ = ($1 <= $4);}
+| expressionInt TOKEN_GE TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR        {$$ = ($1 > $4);}
+| expressionInt TOKEN_GEQ TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR       {$$ = ($1 >= $4);}
+| expressionInt TOKEN_ISEQ TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR      {$$ = ($1 == $4);}
+| expressionInt TOKEN_ISNOTEQ TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR   {$$ = ($1 != $4);}
+| expressionBool TOKEN_AND expressionBool                                   {$$ = ($1 && $3);}
+| expressionBool TOKEN_OR expressionBool                                    {$$ = ($1 || $3);}
+
+
+
+
+
+
+
+
+;
+
+
 expressionString:
     TOKEN_STRING {$$ = strdup($1);}
 ;
 
 expressionDouble:
      TOKEN_DOUBLE                                          {$$ = $1;}
-    | expressionDouble TOKEN_ISEQ expressionDouble          {$$ = ($1 == $3)}
-    | expressionDouble TOKEN_ISNOTEQ expressionDouble       {$$ = ($1 != $3)}
-    | expressionDouble TOKEN_LE expressionDouble            {$$ = ($1 < $3) }
-    | expressionDouble TOKEN_LEQ expressionDouble           {$$ = ($1 <= $3)}
-    | expressionDouble TOKEN_GE expressionDouble            {$$ = ($1 > $3) }
-    | expressionDouble TOKEN_GEQ expressionDouble           {$$ = ($1 >= $3)}
     | expressionDouble TOKEN_PLUS expressionDouble          {$$ = $1 + $3;}
     | expressionDouble TOKEN_MINUS expressionDouble         {$$ = $1 - $3;}
     | expressionDouble TOKEN_MUL expressionDouble           {$$ = $1 * $3;}
@@ -202,24 +284,18 @@ expressionDouble:
 
 
 expressionInt:
-    expressionInt TOKEN_AND expressionInt             {$$ = $1 && $3;}
-    | expressionInt TOKEN_OR expressionInt            {$$ = $1 || $3;}
-    | expressionInt TOKEN_ISEQ expressionInt          {$$ = ($1 == $3) }
-    | expressionInt TOKEN_ISNOTEQ expressionInt       {$$ = ($1 != $3) }
-    | expressionInt TOKEN_LE expressionInt            {$$ = ($1 < $3)  }
-    | expressionInt TOKEN_LEQ expressionInt           {$$ = ($1 <= $3) }
-    | expressionInt TOKEN_GE expressionInt            {$$ = ($1 > $3) }
-    | expressionInt TOKEN_GEQ expressionInt           {$$ = ($1 >= $3) }
-    | expressionInt TOKEN_PLUS expressionInt          {$$ = $1 + $3;}
-    | expressionInt TOKEN_MINUS expressionInt         {$$ = $1 - $3;}
-    | expressionInt TOKEN_MUL expressionInt           {$$ = $1 * $3;}
-    | expressionInt TOKEN_DIV expressionInt           {$$ = $1 / $3;}
-    | expressionInt TOKEN_MOD expressionInt           {$$ = $1 % $3;}
-    | TOKEN_LEFTPAR expressionInt TOKEN_RIGHTPAR   {$$ = $2;}
-    | TOKEN_INT                                 {$$ = $1;}
-    | TOKEN_IDENT                               {
-                                                $$ = nadji($1)->val;
-                                                }
+    expressionInt TOKEN_AND expressionInt               {$$ = $1 && $3;}
+    | expressionInt TOKEN_OR expressionInt              {$$ = $1 || $3;}
+    | expressionInt TOKEN_PLUS expressionInt            {$$ = $1 + $3;}
+    | expressionInt TOKEN_MINUS expressionInt           {$$ = $1 - $3;}
+    | expressionInt TOKEN_MUL expressionInt             {$$ = $1 * $3;}
+    | expressionInt TOKEN_DIV expressionInt             {$$ = $1 / $3;}
+    | expressionInt TOKEN_MOD expressionInt             {$$ = $1 % $3;}
+    | TOKEN_LEFTPAR expressionInt TOKEN_RIGHTPAR        {$$ = $2;}
+    | TOKEN_INT                                         {$$ = $1; printf("%d ",$1);}
+    | TOKEN_IDENT                                       {
+                                                        $$ = nadji($1)->val;
+                                                        }
 ;  
 
 %%   
@@ -235,7 +311,7 @@ int main() {
 
   
 
-    if(brojGresaka == 0) {
+    if(brojGresaka == 0 && rezultat == 0) {
         printf("Ulaz je bio ispravan!\n");
     }
     else {
