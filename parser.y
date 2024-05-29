@@ -9,41 +9,97 @@
 
 void yyerror(const char* s);
 
+
 struct Promjenjiva {
     char* id;
-    int val;
+    int valInt;
+    double valDouble;
+    bool valBool;
+    char* valString;
+    int type;
     struct Promjenjiva* sledeci;
 };
 
 struct Promjenjiva* glava = 0;
 
-void dodajCvor(char* id,int val) {
+void dodajCvor(char* id,int valInt,bool valBool,double valDouble,char* valString,int type) {
     struct Promjenjiva* noviCvor = (struct Promjenjiva*) malloc(sizeof(struct Promjenjiva));
     noviCvor->id = strdup(id);
-    noviCvor->val = val;
+    noviCvor->type = type;
+    switch(type) {
+        case 1:
+
+        noviCvor->valInt = valInt;
+        printf("OVDJE MORA UCI\n\n\n");
+        break;
+
+        case 2:
+        noviCvor->valDouble = valDouble;
+        break;
+
+        case 3:
+        noviCvor->valBool = valBool;
+        break;
+        
+        case 4:
+        noviCvor->valString = strdup(valString);
+        break;
+
+    }
     noviCvor->sledeci = glava;
     glava = noviCvor;
 }
 
-struct Promjenjiva* nadji(char* id) {
+struct Promjenjiva* nadji(char* id,int type) {
     struct Promjenjiva* tren = glava;
+
+    bool flag = false;
 
     while(tren != 0) {
 
         if(strcmp(tren->id,id) == 0) {
+            if(tren->type == type) {
             return tren;
+            }
+            else {
+                flag = true;
+            }
         }
         tren = tren->sledeci;
+    }
+
+    if(flag) {
+        printf("Nije dozvoljena konverzija podataka!");
+        exit(1);
+        brojGresaka++;
     }
     return tren;
 }
 
-void setuj(struct Promjenjiva* p,char* id,int val) {
+void setuj(struct Promjenjiva* p,char* id,int valInt,double valDouble,bool valBool,char* valString,int type) {
     if( p == 0 ) {
-        dodajCvor(id,val);
+        dodajCvor(id,valInt,valDouble,valBool,valString,type);
     }
     else {
-        p->val = val;
+        switch(type) {
+        case 1:
+
+        p->valInt = valInt;
+        break;
+
+        case 2:
+        p->valDouble = valDouble;
+        break;
+
+        case 3:
+        p->valBool = valBool;
+        break;
+        
+        case 4:
+        p->valString = strdup(valString);
+        break;
+
+    }
     }
 }
 
@@ -158,24 +214,39 @@ S: | S statInt      {}
    | S statWhile    {}
    | S statBoolSC   {}
    | S statIf       {}
+   | S statFor      {}
+   
+;
+
+forLoopBody:
+    S  {}
+|   TOKEN_BREAK {}
 ;
 
 
 statBool:
-    expressionBool          {$$ = $1; printf("%d\n",$1)}
+    expressionBool          {$$ = $1;}
 ;
 
 statBoolSC:
-    expressionBool TOKEN_SC {$$ = $1; printf("%d\n",$1);}
+    expressionBool TOKEN_SC {$$ = $1;}
 ;
 
 statIf:
-    TOKEN_IF TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_THEN S TOKEN_ELSE S TOKEN_FI;
+    TOKEN_IF TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_THEN S TOKEN_ELSE S TOKEN_FI {}
+|   TOKEN_IF TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_THEN S TOKEN_FI {}
+
+;
+
 
 
 statWhile:
 
-TOKEN_WHILE TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_DO S TOKEN_END { }
+TOKEN_WHILE TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_DO S TOKEN_END { printf("WHILE ( %d ) DO ... END",$3);}
+;
+
+statFor:
+TOKEN_FOR TOKEN_LEFTPAR statInt statBoolSC statInt TOKEN_RIGHTPAR TOKEN_DO forLoopBody TOKEN_END {printf("FOR (%d %d %d) TOKEN_DO ... TOKEN_END\n",$3,$4,$5);}
 ;
 
 expressionLE:
@@ -184,35 +255,39 @@ expressionLE:
 |       expressionDouble TOKEN_LE expressionInt         {$$ = ($1 < $3);} 
 |       expressionInt TOKEN_LE expressionDouble         {$$ = ($1 < $3);}
 
+;
 expressionLEQ:
         expressionInt TOKEN_LEQ expressionInt            {$$ = ($1 <= $3);}
 |       expressionDouble TOKEN_LEQ expressionDouble      {$$ = ($1 <= $3);}
 |       expressionDouble TOKEN_LEQ expressionInt         {$$ = ($1 <= $3);} 
 |       expressionInt TOKEN_LEQ expressionDouble         {$$ = ($1 <= $3);}
-
+;
 
 expressionGE:
         expressionInt TOKEN_GE expressionInt            {$$ = ($1 > $3);}
 |       expressionDouble TOKEN_GE expressionDouble      {$$ = ($1 > $3);}
 |       expressionDouble TOKEN_GE expressionInt         {$$ = ($1 > $3);} 
 |       expressionInt TOKEN_GE expressionDouble         {$$ = ($1 > $3);}
+;
 
 expressionGEQ:
         expressionInt TOKEN_GEQ expressionInt            {$$ = ($1 >= $3);}
 |       expressionDouble TOKEN_GEQ expressionDouble      {$$ = ($1 >= $3);}
 |       expressionDouble TOKEN_GEQ expressionInt         {$$ = ($1 >= $3);} 
 |       expressionInt TOKEN_GEQ expressionDouble         {$$ = ($1 >= $3);}
+;
 
 
 expressionISEQ:
         expressionInt TOKEN_ISEQ expressionInt            {$$ = ($1 == $3);}
 |       expressionDouble TOKEN_ISEQ expressionDouble      {$$ = ($1 == $3);}
+;
 
 
 expressionISNOTEQ:
         expressionInt TOKEN_ISNOTEQ expressionInt            {$$ = ($1 != $3);}
 |       expressionDouble TOKEN_ISNOTEQ expressionDouble      {$$ = ($1 != $3);}
-
+;
 
 
 statString:
@@ -220,17 +295,62 @@ statString:
 ;
 
 statInt: 
-    expressionInt TOKEN_SC {printf("%d\n",$1);}
    
-   | TOKEN_IDENT TOKEN_EQ expressionInt TOKEN_SC {
-                                                struct Promjenjiva* p = nadji($1);
-                                                setuj(p,$1,$3);
+TOKEN_IDENT TOKEN_EQ expressionInt TOKEN_SC {struct Promjenjiva* p = nadji($1,1);
+                                                 if(p == 0) {
+                                                    nedefinisanIdent(red,kolona);
+                                                    exit(1);
+                                                 }
+
+                                                 printf("HAHAHAHAHA%d\n\n\n\n",$3);
+
+                                                 setuj(p,$1,$3,0,0,NULL,1);
+
+                                                 $$ = p->valInt;
+   
+                                               }
+|   TOKEN_INTIDENT TOKEN_IDENT TOKEN_EQ expressionInt TOKEN_SC {
+                                                struct Promjenjiva* p = nadji($2,1); // p id,intval,doubleval,boolval,stringval,type
+                                                
+                                                if(p != 0) {
+                                                    ponovnaDeklaracija(red,kolona);
+                                                    exit(1);
+                                                }
+
+                                                setuj(p,$2,$4,0,0,NULL,1);
+
+                                                printf("%s = %d\n",$2,$4);
+
+                                                $$ = p->valInt;
                                                }
 ;
 
 
-statDouble: expressionDouble TOKEN_SC {printf("%f\n",$1);}
-   | TOKEN_IDENT TOKEN_EQ expressionDouble TOKEN_SC {}
+statDouble: TOKEN_IDENT TOKEN_EQ expressionDouble TOKEN_SC {struct Promjenjiva* p = nadji($1,2);
+                                                 if(p == 0) {
+                                                    nedefinisanIdent(red,kolona);
+                                                    exit(1);
+                                                    brojGresaka++;
+                                                 }
+                                                    setuj(p,$1,0,$3,0,NULL,2);
+                                                    $$ = p->valDouble;
+                                                 }  
+   | TOKEN_DOUBLEIDENT TOKEN_IDENT TOKEN_EQ expressionDouble TOKEN_SC {
+                                                struct Promjenjiva* p = nadji($2,2); // p id,intval,doubleval,boolval,stringval,type
+                                                
+                                               if(p != 0) {
+                                                    ponovnaDeklaracija(red,kolona);
+                                                    exit(1);
+                                                }
+
+
+                                                setuj(p,$2,0,$4,0,NULL,2);
+
+                                                printf("%s = %f\n",$2,$4);
+
+                                                $$ = p->valDouble;
+                                                
+                                                }
 ;
 
 expressionBool:
@@ -258,13 +378,6 @@ expressionBool:
 | expressionBool TOKEN_AND expressionBool                                   {$$ = ($1 && $3);}
 | expressionBool TOKEN_OR expressionBool                                    {$$ = ($1 || $3);}
 
-
-
-
-
-
-
-
 ;
 
 
@@ -273,7 +386,7 @@ expressionString:
 ;
 
 expressionDouble:
-     TOKEN_DOUBLE                                          {$$ = $1;}
+     TOKEN_DOUBLE                                           {$$ = $1;}
     | expressionDouble TOKEN_PLUS expressionDouble          {$$ = $1 + $3;}
     | expressionDouble TOKEN_MINUS expressionDouble         {$$ = $1 - $3;}
     | expressionDouble TOKEN_MUL expressionDouble           {$$ = $1 * $3;}
@@ -294,14 +407,14 @@ expressionInt:
     | TOKEN_LEFTPAR expressionInt TOKEN_RIGHTPAR        {$$ = $2;}
     | TOKEN_INT                                         {$$ = $1;}
     | TOKEN_IDENT                                       {
-                                                        $$ = nadji($1)->val;
+                                                        $$ = nadji($1,1)->valInt;
                                                         }
 ;  
 
 %%   
 
 void yyerror(const char* s) {
-    
+    printf("%s",s);
 }
 
 
