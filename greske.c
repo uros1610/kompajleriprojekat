@@ -37,3 +37,16 @@ void nezatvorenKomentar(int red, int kolona) {
     brojGresaka++;
     printf("Greska na liniji %d karakter %d nezatvoren komentar\n", red, kolona);
 }
+
+void nedefinisanIdent(int red,int kolona) {
+    brojGresaka++;
+    printf("Nije definisan Identifikator na liniji %d karakter %d",red,kolona);
+
+}
+
+void ponovnaDeklaracija(int red,int kolona) {
+    brojGresaka++;
+    printf("Ponovna deklaracija na liniji %d karakter %d",red,kolona);
+
+}
+
