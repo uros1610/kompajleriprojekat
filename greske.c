@@ -49,4 +49,3 @@ void ponovnaDeklaracija(int red,int kolona) {
     printf("Ponovna deklaracija na liniji %d karakter %d",red,kolona);
 
 }
-
