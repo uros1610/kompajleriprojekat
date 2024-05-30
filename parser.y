@@ -30,6 +30,7 @@ void dodajCvor(char* id,int valInt,bool valBool,double valDouble,char* valString
         case 1:
 
         noviCvor->valInt = valInt;
+        printf("OVDJE MORA UCI\n\n\n");
         break;
 
         case 2:
@@ -245,7 +246,7 @@ TOKEN_WHILE TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_DO S TOKEN_END { printf(
 ;
 
 statFor:
-TOKEN_FOR TOKEN_LEFTPAR statInt statBoolSC statInt TOKEN_RIGHTPAR TOKEN_DO forLoopBody TOKEN_END {}
+TOKEN_FOR TOKEN_LEFTPAR statInt statBoolSC statInt TOKEN_RIGHTPAR TOKEN_DO forLoopBody TOKEN_END {printf("FOR (%d %d %d) TOKEN_DO ... TOKEN_END\n",$3,$4,$5);}
 ;
 
 expressionLE:
@@ -301,6 +302,7 @@ TOKEN_IDENT TOKEN_EQ expressionInt TOKEN_SC {struct Promjenjiva* p = nadji($1,1)
                                                     exit(1);
                                                  }
 
+                                                 printf("HAHAHAHAHA%d\n\n\n\n",$3);
 
                                                  setuj(p,$1,$3,0,0,NULL,1);
 
@@ -317,6 +319,7 @@ TOKEN_IDENT TOKEN_EQ expressionInt TOKEN_SC {struct Promjenjiva* p = nadji($1,1)
 
                                                 setuj(p,$2,$4,0,0,NULL,1);
 
+                                                printf("%s = %d\n",$2,$4);
 
                                                 $$ = p->valInt;
                                                }
@@ -343,6 +346,7 @@ statDouble: TOKEN_IDENT TOKEN_EQ expressionDouble TOKEN_SC {struct Promjenjiva* 
 
                                                 setuj(p,$2,0,$4,0,NULL,2);
 
+                                                printf("%s = %f\n",$2,$4);
 
                                                 $$ = p->valDouble;
                                                 
