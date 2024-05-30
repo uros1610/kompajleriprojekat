@@ -22,7 +22,7 @@ struct Promjenjiva {
 
 struct Promjenjiva* glava = 0;
 
-void dodajCvor(char* id,int valInt,bool valBool,double valDouble,char* valString,int type) {
+void  dodajCvor(char* id,int valInt,bool valBool,double valDouble,char* valString,int type) {
     struct Promjenjiva* noviCvor = (struct Promjenjiva*) malloc(sizeof(struct Promjenjiva));
     noviCvor->id = strdup(id);
     noviCvor->type = type;
@@ -30,7 +30,6 @@ void dodajCvor(char* id,int valInt,bool valBool,double valDouble,char* valString
         case 1:
 
         noviCvor->valInt = valInt;
-        printf("OVDJE MORA UCI\n\n\n");
         break;
 
         case 2:
@@ -48,6 +47,8 @@ void dodajCvor(char* id,int valInt,bool valBool,double valDouble,char* valString
     }
     noviCvor->sledeci = glava;
     glava = noviCvor;
+
+    
 }
 
 struct Promjenjiva* nadji(char* id,int type) {
@@ -78,7 +79,7 @@ struct Promjenjiva* nadji(char* id,int type) {
 
 void setuj(struct Promjenjiva* p,char* id,int valInt,double valDouble,bool valBool,char* valString,int type) {
     if( p == 0 ) {
-        dodajCvor(id,valInt,valDouble,valBool,valString,type);
+       dodajCvor(id,valInt,valDouble,valBool,valString,type);
     }
     else {
         switch(type) {
@@ -220,7 +221,7 @@ S: | S statInt      {}
 
 forLoopBody:
     S  {}
-|   TOKEN_BREAK {}
+|   TOKEN_BREAK TOKEN_SC {}
 ;
 
 
@@ -302,11 +303,11 @@ TOKEN_IDENT TOKEN_EQ expressionInt TOKEN_SC {struct Promjenjiva* p = nadji($1,1)
                                                     exit(1);
                                                  }
 
-                                                 printf("HAHAHAHAHA%d\n\n\n\n",$3);
 
                                                  setuj(p,$1,$3,0,0,NULL,1);
 
-                                                 $$ = p->valInt;
+
+                                                 $$ = $3;
    
                                                }
 |   TOKEN_INTIDENT TOKEN_IDENT TOKEN_EQ expressionInt TOKEN_SC {
@@ -321,7 +322,9 @@ TOKEN_IDENT TOKEN_EQ expressionInt TOKEN_SC {struct Promjenjiva* p = nadji($1,1)
 
                                                 printf("%s = %d\n",$2,$4);
 
-                                                $$ = p->valInt;
+
+
+                                                $$ = $4;
                                                }
 ;
 
@@ -333,7 +336,7 @@ statDouble: TOKEN_IDENT TOKEN_EQ expressionDouble TOKEN_SC {struct Promjenjiva* 
                                                     brojGresaka++;
                                                  }
                                                     setuj(p,$1,0,$3,0,NULL,2);
-                                                    $$ = p->valDouble;
+                                                    $$ = $3;
                                                  }  
    | TOKEN_DOUBLEIDENT TOKEN_IDENT TOKEN_EQ expressionDouble TOKEN_SC {
                                                 struct Promjenjiva* p = nadji($2,2); // p id,intval,doubleval,boolval,stringval,type
@@ -345,10 +348,9 @@ statDouble: TOKEN_IDENT TOKEN_EQ expressionDouble TOKEN_SC {struct Promjenjiva* 
 
 
                                                 setuj(p,$2,0,$4,0,NULL,2);
+                                                
 
-                                                printf("%s = %f\n",$2,$4);
-
-                                                $$ = p->valDouble;
+                                                $$ = $4;
                                                 
                                                 }
 ;
@@ -414,7 +416,7 @@ expressionInt:
 %%   
 
 void yyerror(const char* s) {
-    printf("%s",s);
+    printf("%s\n",s);
 }
 
 
