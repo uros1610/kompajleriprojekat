@@ -2,9 +2,9 @@
 #ifndef GRESKE_H
 #define GRESKE_H
 
- int kolona;
- int brojGresaka;
- int red;
+ extern int kolona;
+ extern int brojGresaka;
+ extern int red;
  void predugacakIdentifikator(int red,int kolona,const char* identifikator);
  void nezatvorenString(int red,int kolona,const char* str);
  void noviRedString(int red,int kolona,const char* str);
