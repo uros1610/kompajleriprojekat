@@ -61,6 +61,8 @@ int kolona = 1;
 (0|([1-9][0-9]*))(E|e)\-[0-9]*              {kolona+=yyleng; bezTacke(red,kolona,yytext);}
 
 
+\[           {kolona+=yyleng; return TOKEN_LEFTBRACKET;}
+\]           {kolona+=yyleng; return TOKEN_RIGHTBRACKET;}
 
 [ \t\r\n]     {}
 "\\"          { kolona+=yyleng; return TOKEN_FWSLASH;}
