@@ -65,32 +65,34 @@
      TOKEN_DOT = 281,
      TOKEN_LEFTPAR = 282,
      TOKEN_RIGHTPAR = 283,
-     TOKEN_FOR = 284,
-     TOKEN_WHILE = 285,
-     TOKEN_BREAK = 286,
-     TOKEN_IF = 287,
-     TOKEN_ELSE = 288,
-     TOKEN_INTIDENT = 289,
-     TOKEN_STRINGIDENT = 290,
-     TOKEN_BOOLIDENT = 291,
-     TOKEN_DOUBLEIDENT = 292,
-     TOKEN_RETURN = 293,
-     TOKEN_THIS = 294,
-     TOKEN_LET = 295,
-     TOKEN_IN = 296,
-     TOKEN_READ = 297,
-     TOKEN_WRITE = 298,
-     TOKEN_END = 299,
-     TOKEN_SKIP = 300,
-     TOKEN_DOTSEQ = 301,
-     TOKEN_FWSLASH = 302,
-     TOKEN_FI = 303,
-     TOKEN_INTCONST = 304,
-     TOKEN_STRINGCONST = 305,
-     TOKEN_BOOLCONST = 306,
-     TOKEN_DOUBLECONST = 307,
-     TOKEN_DO = 308,
-     TOKEN_THEN = 309
+     TOKEN_RIGHTBRACKET = 284,
+     TOKEN_LEFTBRACKET = 285,
+     TOKEN_FOR = 286,
+     TOKEN_WHILE = 287,
+     TOKEN_BREAK = 288,
+     TOKEN_IF = 289,
+     TOKEN_ELSE = 290,
+     TOKEN_INTIDENT = 291,
+     TOKEN_STRINGIDENT = 292,
+     TOKEN_BOOLIDENT = 293,
+     TOKEN_DOUBLEIDENT = 294,
+     TOKEN_RETURN = 295,
+     TOKEN_THIS = 296,
+     TOKEN_LET = 297,
+     TOKEN_IN = 298,
+     TOKEN_READ = 299,
+     TOKEN_WRITE = 300,
+     TOKEN_END = 301,
+     TOKEN_SKIP = 302,
+     TOKEN_DOTSEQ = 303,
+     TOKEN_FWSLASH = 304,
+     TOKEN_FI = 305,
+     TOKEN_INTCONST = 306,
+     TOKEN_STRINGCONST = 307,
+     TOKEN_BOOLCONST = 308,
+     TOKEN_DOUBLECONST = 309,
+     TOKEN_DO = 310,
+     TOKEN_THEN = 311
    };
 #endif
 
@@ -114,7 +116,7 @@ char* ident;
 
 
 /* Line 1676 of yacc.c  */
-#line 118 "parser.tab.h"
+#line 120 "parser.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
