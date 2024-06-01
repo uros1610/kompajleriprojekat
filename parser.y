@@ -214,7 +214,7 @@ TOKEN_LET TOKEN_LEFTBRACKET declarations TOKEN_RIGHTBRACKET TOKEN_IN S TOKEN_END
 ;
 
 declarations:
-|   declarations TOKEN_INTIDENT TOKEN_IDENT
+|  declarations TOKEN_INTIDENT TOKEN_IDENT
 |  declarations TOKEN_STRINGIDENT TOKEN_IDENT
 |  declarations TOKEN_DOUBLEIDENT TOKEN_IDENT
 |  declarations TOKEN_BOOLIDENT TOKEN_IDENT
@@ -228,23 +228,64 @@ S: | S statInt      {}
    | S statBoolSC   {}
    | S statIf       {}
    | S statFor      {}
+   | S statFunc     {}
+   | S statWrite    {}
+   | S statRead     {}
    
 ;
 
 forLoopBody:
-|   statInt forLoopBody        {}
-|   statDouble forLoopBody      {}
-|   statBoolSC forLoopBody     {}
-|   statWhile forLoopBody      {}
-|   statIf forLoopBody         {}
-|   statFor forLoopBody         {}
-|   TOKEN_BREAK TOKEN_SC  S      {}
+|   statInt forLoopBody             {}
+|   statDouble forLoopBody          {}
+|   statBoolSC forLoopBody          {}
+|   statWhile forLoopBody           {}
+|   statIf forLoopBody              {}
+|   statFor forLoopBody             {}
+|   statWrite forLoopBody           {}
+|   statRead forLoopBody            {}
+|   statFunc forLoopBody            {}
+|   TOKEN_BREAK TOKEN_SC  S         {}
 ;
 
 
 statBool:
      expressionBool                                     {}
 ;
+
+statFunc:
+    TOKEN_INTIDENT TOKEN_IDENT TOKEN_LEFTPAR declarations TOKEN_RIGHTPAR TOKEN_DO S TOKEN_RETURN expressionInt TOKEN_SC {}
+    |TOKEN_DOUBLEIDENT TOKEN_IDENT  TOKEN_LEFTPAR declarations TOKEN_RIGHTPAR TOKEN_DO S TOKEN_RETURN expressionDouble TOKEN_SC
+    |TOKEN_STRINGIDENT TOKEN_IDENT  TOKEN_LEFTPAR declarations TOKEN_RIGHTPAR TOKEN_DO S TOKEN_RETURN expressionString TOKEN_SC
+    |TOKEN_BOOLIDENT TOKEN_IDENT  TOKEN_LEFTPAR declarations TOKEN_RIGHTPAR TOKEN_DO S TOKEN_RETURN expressionBool TOKEN_SC
+;
+
+statWrite:
+     TOKEN_WRITE TOKEN_LEFTPAR statIdentsWrite TOKEN_SC
+;
+
+
+statRead:
+       TOKEN_READ TOKEN_LEFTPAR statIdentsRead TOKEN_SC
+;
+
+statIdentsWrite:
+      expressionInt TOKEN_RIGHTPAR
+    | expressionDouble TOKEN_RIGHTPAR
+    | expressionBool TOKEN_RIGHTPAR
+    | expressionString TOKEN_RIGHTPAR
+    | expressionInt TOKEN_RIGHTPAR TOKEN_COMMA statIdentsWrite
+    | expressionDouble TOKEN_RIGHTPAR TOKEN_COMMA statIdentsWrite
+    | expressionBool TOKEN_RIGHTPAR TOKEN_COMMA statIdentsWrite
+    | expressionString TOKEN_RIGHTPAR TOKEN_COMMA statIdentsWrite
+  
+
+statIdentsRead:
+      TOKEN_IDENT TOKEN_RIGHTPAR
+    | TOKEN_IDENT TOKEN_COMMA statIdentsRead
+
+;
+
+
 
 statBoolSC:
     expressionBool TOKEN_SC                         {}
