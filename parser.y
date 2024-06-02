@@ -407,7 +407,7 @@ int main() {
     inicijalizujRed(red);
 
     dodajURed(red,korijen);
-    struct Cvor* tren = red->glava;
+   
 
     while(true) {
         if(red->glava == 0) {
