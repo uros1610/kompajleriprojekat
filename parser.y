@@ -175,9 +175,8 @@ S:                                                                              
 | S statInt                                                                             {dodajSina($1,$2);}                                                                            
    | S statDouble                                                                       {dodajSina($1,$2);}
    | S statString                                                                       {dodajSina($1,$2);}
-   | S statBool                                                                         {}
    | S statWhile                                                                        {}
-   | S statBoolSC                                                                       {}
+   | S statBoolSC                                                                       {dodajSina($1,$2);}
    | TOKEN_IF TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_THEN  S TOKEN_FI              {}
    | TOKEN_IF TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_THEN S TOKEN_ELSE S TOKEN_FI  {}
    | S statFor                                                                          {}
@@ -203,7 +202,7 @@ forLoopBody:
 
 
 statBool:
-     expressionBool                                     {}
+     expressionBool                                     {$$ = $1;}
 ;
 
 statFunc:
@@ -242,8 +241,12 @@ statIdentsRead:
 
 
 statBoolSC:
-    expressionBool TOKEN_SC                         {}
-|   TOKEN_IDENT TOKEN_EQ expressionBool TOKEN_SC    {}
+    TOKEN_IDENT TOKEN_EQ expressionBool TOKEN_SC    {$$ = kreirajCvor("boolAssignment");
+
+dodajSina($$,$1);
+dodajSina($$,$3);
+
+}
 ;
 
 
@@ -259,43 +262,43 @@ TOKEN_FOR TOKEN_LEFTPAR statInt statBoolSC statInt TOKEN_RIGHTPAR TOKEN_DO forLo
 ;
 
 expressionLE:
-        expressionInt TOKEN_LE expressionInt            {}
-|       expressionDouble TOKEN_LE expressionDouble      {}
-|       expressionDouble TOKEN_LE expressionInt         {} 
-|       expressionInt TOKEN_LE expressionDouble         {}
+        expressionInt TOKEN_LE expressionInt            {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+|       expressionDouble TOKEN_LE expressionDouble      {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+|       expressionDouble TOKEN_LE expressionInt         {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);} 
+|       expressionInt TOKEN_LE expressionDouble         {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
 
 ;
 expressionLEQ:
-        expressionInt TOKEN_LEQ expressionInt            {}
-|       expressionDouble TOKEN_LEQ expressionDouble      {}
-|       expressionDouble TOKEN_LEQ expressionInt         {} 
-|       expressionInt TOKEN_LEQ expressionDouble         {}
+        expressionInt TOKEN_LEQ expressionInt            {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+|       expressionDouble TOKEN_LEQ expressionDouble      {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+|       expressionDouble TOKEN_LEQ expressionInt         {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);} 
+|       expressionInt TOKEN_LEQ expressionDouble         {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
 ;
 
 expressionGE:
-        expressionInt TOKEN_GE expressionInt            {}
-|       expressionDouble TOKEN_GE expressionDouble      {}
-|       expressionDouble TOKEN_GE expressionInt         {} 
-|       expressionInt TOKEN_GE expressionDouble         {}
+        expressionInt TOKEN_GE expressionInt            {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+|       expressionDouble TOKEN_GE expressionDouble      {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+|       expressionDouble TOKEN_GE expressionInt         {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);} 
+|       expressionInt TOKEN_GE expressionDouble         {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
 ;
 
 expressionGEQ:
-        expressionInt TOKEN_GEQ expressionInt            {}
-|       expressionDouble TOKEN_GEQ expressionDouble      {}
-|       expressionDouble TOKEN_GEQ expressionInt         {} 
-|       expressionInt TOKEN_GEQ expressionDouble         {}
+        expressionInt TOKEN_GEQ expressionInt            {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+|       expressionDouble TOKEN_GEQ expressionDouble      {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+|       expressionDouble TOKEN_GEQ expressionInt         {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);} 
+|       expressionInt TOKEN_GEQ expressionDouble         {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
 ;
 
 
 expressionISEQ:
-        expressionInt TOKEN_ISEQ expressionInt            {}
-|       expressionDouble TOKEN_ISEQ expressionDouble      {}
+        expressionInt TOKEN_ISEQ expressionInt            {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+|       expressionDouble TOKEN_ISEQ expressionDouble      {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
 ;
 
 
 expressionISNOTEQ:
-        expressionInt TOKEN_ISNOTEQ expressionInt            {}
-|       expressionDouble TOKEN_ISNOTEQ expressionDouble      {}
+        expressionInt TOKEN_ISNOTEQ expressionInt            {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+|       expressionDouble TOKEN_ISNOTEQ expressionDouble      {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
 ;
 
 
@@ -325,29 +328,29 @@ dodajSina($$,$3);
 ;
 
 expressionBool:
-  TOKEN_FALSE                                                               {}
-| TOKEN_TRUE                                                                {}
-| expressionBool TOKEN_LE expressionBool                                    {}
-| expressionBool TOKEN_LEQ expressionBool                                   {}
-| expressionBool TOKEN_GEQ expressionBool                                   {}
-| expressionBool TOKEN_GE expressionBool                                    {}
-| expressionBool TOKEN_ISEQ expressionBool                                  {}
-| expressionBool TOKEN_ISNOTEQ expressionBool                               {}
-| expressionGE                                                              {}
-| expressionGEQ                                                             {}
-| expressionISEQ                                                            {}
-| expressionISNOTEQ                                                         {}
-| expressionLE                                                              {}
-| expressionLEQ                                                             {}
-| TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR                               {}
-| expressionInt TOKEN_LE TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR        {}
-| expressionInt TOKEN_LEQ TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR       {}
-| expressionInt TOKEN_GE TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR        {}
-| expressionInt TOKEN_GEQ TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR       {}
-| expressionInt TOKEN_ISEQ TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR      {}
-| expressionInt TOKEN_ISNOTEQ TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR   {}
-| expressionBool TOKEN_AND expressionBool                                   {}
-| expressionBool TOKEN_OR expressionBool                                    {}
+  TOKEN_FALSE                                                               {$$ = $1;}
+| TOKEN_TRUE                                                                {$$ = $1;}
+| expressionBool TOKEN_LE expressionBool                                    {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+| expressionBool TOKEN_LEQ expressionBool                                   {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+| expressionBool TOKEN_GEQ expressionBool                                   {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+| expressionBool TOKEN_GE expressionBool                                    {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+| expressionBool TOKEN_ISEQ expressionBool                                  {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+| expressionBool TOKEN_ISNOTEQ expressionBool                               {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+| expressionGE                                                              {$$ = $1;}
+| expressionGEQ                                                             {$$ = $1;}
+| expressionISEQ                                                            {$$ = $1;}
+| expressionISNOTEQ                                                         {$$ = $1;}
+| expressionLE                                                              {$$ = $1;}
+| expressionLEQ                                                             {$$ = $1;}
+| TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR                               {$$ = $2;}
+| expressionInt TOKEN_LE TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR        {$$ = $2; dodajSina($2,$1); dodajSina($2,$3); dodajSina($2,$4);}
+| expressionInt TOKEN_LEQ TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR       {$$ = $2; dodajSina($2,$1); dodajSina($2,$3); dodajSina($2,$4);}
+| expressionInt TOKEN_GE TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR        {$$ = $2; dodajSina($2,$1); dodajSina($2,$3); dodajSina($2,$4);}
+| expressionInt TOKEN_GEQ TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR       {$$ = $2; dodajSina($2,$1); dodajSina($2,$3); dodajSina($2,$4);}
+| expressionInt TOKEN_ISEQ TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR      {$$ = $2; dodajSina($2,$1); dodajSina($2,$3); dodajSina($2,$4);}
+| expressionInt TOKEN_ISNOTEQ TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR   {$$ = $2; dodajSina($2,$1); dodajSina($2,$3); dodajSina($2,$4);}
+| expressionBool TOKEN_AND expressionBool                                   {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+| expressionBool TOKEN_OR expressionBool                                    {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
 
 ;
 
@@ -406,8 +409,10 @@ int main() {
     dodajURed(red,korijen);
     struct Cvor* tren = red->glava;
 
-    while(tren != 0) {
-        
+    while(true) {
+        if(red->glava == 0) {
+            break;
+        }
         struct Cvor* tmp = ukloniSPocetka(red);
         
         if(tmp->nivo > nivo) {
@@ -434,10 +439,10 @@ int main() {
   
 
     if(brojGresaka == 0 && rezultat == 0) {
-        printf("Ulaz je bio ispravan!\n");
+        printf("\nUlaz je bio ispravan!\n");
     }
     else {
-        printf("Ulaz nije bio ispravan!\n");
+        printf("\nUlaz nije bio ispravan!\n");
     }
 
     return 0;
