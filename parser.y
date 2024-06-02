@@ -6,175 +6,78 @@
 #include <string.h>
 
 #include "greske.h"
+#include "cvor.h"
+#include "red.h"
 
 void yyerror(const char* s);
 
-
-struct Promjenjiva {
-    char* id;
-    int valInt;
-    double valDouble;
-    bool valBool;
-    char* valString;
-    int type;
-    struct Promjenjiva* sledeci;
-};
-
-struct Promjenjiva* glava = 0;
-
-void  dodajCvor(char* id,int valInt,bool valBool,double valDouble,char* valString,int type) {
-    struct Promjenjiva* noviCvor = (struct Promjenjiva*) malloc(sizeof(struct Promjenjiva));
-    noviCvor->id = strdup(id);
-    noviCvor->type = type;
-    switch(type) {
-        case 1:
-
-        noviCvor->valInt = valInt;
-        break;
-
-        case 2:
-        noviCvor->valDouble = valDouble;
-        break;
-
-        case 3:
-        noviCvor->valBool = valBool;
-        break;
-        
-        case 4:
-        noviCvor->valString = strdup(valString);
-        break;
-
-    }
-    noviCvor->sledeci = glava;
-    glava = noviCvor;
-
-    
-}
-
-struct Promjenjiva* nadji(char* id,int type) {
-    struct Promjenjiva* tren = glava;
-
-    bool flag = false;
-
-    while(tren != 0) {
-
-        if(strcmp(tren->id,id) == 0) {
-            if(tren->type == type) {
-            return tren;
-            }
-            else {
-                flag = true;
-            }
-        }
-        tren = tren->sledeci;
-    }
-
-    if(flag) {
-        printf("Nije dozvoljena konverzija podataka!");
-        exit(1);
-        brojGresaka++;
-    }
-    return tren;
-}
-
-void setuj(struct Promjenjiva* p,char* id,int valInt,double valDouble,bool valBool,char* valString,int type) {
-    if( p == 0 ) {
-       dodajCvor(id,valInt,valDouble,valBool,valString,type);
-    }
-    else {
-        switch(type) {
-        case 1:
-
-        p->valInt = valInt;
-        break;
-
-        case 2:
-        p->valDouble = valDouble;
-        break;
-
-        case 3:
-        p->valBool = valBool;
-        break;
-        
-        case 4:
-        p->valString = strdup(valString);
-        break;
-
-    }
-    }
-}
-
-
+ Cvor* korijen;
 
 
 %}
 
 %union { 
 
-int int_value;
-char* str_value;
-double dbl_value;
-bool bool_value;
-char* ident;
+struct Cvor* CvorPokazivac;
 
 }
 
 
 %start program
-%token TOKEN_SC
-%token<int_value> TOKEN_INT
-%token<str_value> TOKEN_STRING
-%token<dbl_value> TOKEN_DOUBLE
-%token<ident> TOKEN_IDENT
-%token<bool_value> TOKEN_TRUE
-%token<bool_value> TOKEN_FALSE
-%token TOKEN_PLUS
-%token TOKEN_MINUS
-%token TOKEN_MUL
-%token TOKEN_DIV
-%token TOKEN_MOD
-%token TOKEN_LE
-%token TOKEN_LEQ
-%token TOKEN_GE
-%token TOKEN_GEQ
-%token TOKEN_EQ
-%token TOKEN_ISEQ
-%token TOKEN_ISNOTEQ
-%token TOKEN_AND
-%token TOKEN_OR
-%token TOKEN_EXCLAM
-%token TOKEN_COMMA
-%token TOKEN_DOT
-%token TOKEN_LEFTPAR
-%token TOKEN_RIGHTPAR
-%token TOKEN_RIGHTBRACKET
-%token TOKEN_LEFTBRACKET
-%token TOKEN_FOR
-%token TOKEN_WHILE
-%token TOKEN_BREAK
-%token TOKEN_IF
-%token TOKEN_ELSE
-%token TOKEN_INTIDENT
-%token TOKEN_STRINGIDENT
-%token TOKEN_BOOLIDENT
-%token TOKEN_DOUBLEIDENT
-%token TOKEN_RETURN
-%token TOKEN_THIS
-%token TOKEN_LET;
-%token TOKEN_IN;
-%token TOKEN_READ
-%token TOKEN_WRITE
-%token TOKEN_END
-%token TOKEN_SKIP
-%token TOKEN_DOTSEQ
-%token TOKEN_FWSLASH
-%token TOKEN_FI
-%token TOKEN_INTCONST
-%token TOKEN_STRINGCONST
-%token TOKEN_BOOLCONST
-%token TOKEN_DOUBLECONST
-%token TOKEN_DO
-%token TOKEN_THEN
+%token<CvorPokazivac> TOKEN_SC
+%token<CvorPokazivac> TOKEN_INT
+%token<CvorPokazivac> TOKEN_STRING
+%token<CvorPokazivac> TOKEN_DOUBLE
+%token<CvorPokazivac> TOKEN_IDENT
+%token<CvorPokazivac> TOKEN_TRUE
+%token<CvorPokazivac> TOKEN_FALSE
+%token<CvorPokazivac> TOKEN_PLUS
+%token<CvorPokazivac> TOKEN_MINUS
+%token<CvorPokazivac> TOKEN_MUL
+%token<CvorPokazivac> TOKEN_DIV
+%token<CvorPokazivac> TOKEN_MOD
+%token<CvorPokazivac> TOKEN_LE
+%token<CvorPokazivac> TOKEN_LEQ
+%token<CvorPokazivac> TOKEN_GE
+%token<CvorPokazivac> TOKEN_GEQ
+%token<CvorPokazivac> TOKEN_EQ
+%token<CvorPokazivac> TOKEN_ISEQ
+%token<CvorPokazivac> TOKEN_ISNOTEQ
+%token<CvorPokazivac> TOKEN_AND
+%token<CvorPokazivac> TOKEN_OR
+%token<CvorPokazivac> TOKEN_EXCLAM
+%token<CvorPokazivac> TOKEN_COMMA
+%token<CvorPokazivac> TOKEN_DOT
+%token<CvorPokazivac> TOKEN_LEFTPAR
+%token<CvorPokazivac> TOKEN_RIGHTPAR
+%token<CvorPokazivac> TOKEN_RIGHTBRACKET
+%token<CvorPokazivac> TOKEN_LEFTBRACKET
+%token<CvorPokazivac> TOKEN_FOR
+%token<CvorPokazivac> TOKEN_WHILE
+%token<CvorPokazivac> TOKEN_BREAK
+%token<CvorPokazivac> TOKEN_IF
+%token<CvorPokazivac> TOKEN_ELSE
+%token<CvorPokazivac> TOKEN_INTIDENT
+%token<CvorPokazivac> TOKEN_STRINGIDENT
+%token<CvorPokazivac> TOKEN_BOOLIDENT
+%token<CvorPokazivac> TOKEN_DOUBLEIDENT
+%token<CvorPokazivac> TOKEN_RETURN
+%token<CvorPokazivac> TOKEN_THIS
+%token<CvorPokazivac> TOKEN_LET;
+%token<CvorPokazivac> TOKEN_IN;
+%token<CvorPokazivac> TOKEN_READ
+%token<CvorPokazivac> TOKEN_WRITE
+%token<CvorPokazivac> TOKEN_END
+%token<CvorPokazivac> TOKEN_SKIP
+%token<CvorPokazivac> TOKEN_DOTSEQ
+%token<CvorPokazivac> TOKEN_FWSLASH
+%token<CvorPokazivac> TOKEN_FI
+%token<CvorPokazivac> TOKEN_INTCONST
+%token<CvorPokazivac> TOKEN_STRINGCONST
+%token<CvorPokazivac> TOKEN_BOOLCONST
+%token<CvorPokazivac> TOKEN_DOUBLECONST
+%token<CvorPokazivac> TOKEN_DO
+%token<CvorPokazivac> TOKEN_THEN
 
 
 
@@ -183,68 +86,119 @@ char* ident;
 %left TOKEN_PLUS TOKEN_MINUS
 %left TOKEN_MUL TOKEN_DIV TOKEN_MOD
 
+%type <CvorPokazivac> program
+%type <CvorPokazivac> declarations
+%type <CvorPokazivac> declaration
 
-%type <int_value>expressionInt
-%type <int_value>statInt
 
-%type <dbl_value>expressionDouble
-%type <dbl_value>statDouble
+%type <CvorPokazivac>expressionInt
+%type <CvorPokazivac>statInt
 
-%type <str_value>expressionString
-%type <str_value>statString
+%type <CvorPokazivac>expressionDouble
+%type <CvorPokazivac>statDouble
 
-%type <bool_value>expressionBool
-%type <bool_value>statBool
-%type <bool_value>statBoolSC
+%type <CvorPokazivac>expressionString
+%type <CvorPokazivac>statString
 
-%type <bool_value>expressionLE
-%type <bool_value>expressionLEQ
-%type <bool_value>expressionGE
-%type <bool_value>expressionGEQ
-%type <bool_value>expressionISEQ
-%type <bool_value>expressionISNOTEQ
+%type <CvorPokazivac>expressionBool
+%type <CvorPokazivac>statBool
+%type <CvorPokazivac>statBoolSC
 
+%type <CvorPokazivac> expressionLE
+%type <CvorPokazivac> expressionLEQ
+%type <CvorPokazivac> expressionGE
+%type <CvorPokazivac> expressionGEQ
+%type <CvorPokazivac> expressionISEQ
+%type <CvorPokazivac> expressionISNOTEQ
+%type <CvorPokazivac> S
 
 %%
 
 
-program: | 
-TOKEN_LET TOKEN_LEFTBRACKET declarations TOKEN_RIGHTBRACKET TOKEN_IN S TOKEN_END
+program: {}
+| TOKEN_LET TOKEN_LEFTBRACKET declarations TOKEN_RIGHTBRACKET TOKEN_IN S TOKEN_END {
+Cvor* letSin = $1;
+Cvor* lijevaZagrada = $2;
+Cvor* deklaracije = $3;
+Cvor* desnaZagrada = $4;
+Cvor* inSin = $5;
+Cvor* naredbeSin = $6;
+Cvor* endSin = $7;
+
+dodajSina(korijen,letSin);
+dodajSina(korijen,lijevaZagrada);
+dodajSina(korijen,deklaracije);
+dodajSina(korijen,desnaZagrada);
+dodajSina(korijen,inSin);
+dodajSina(korijen,naredbeSin);
+dodajSina(korijen,endSin);
+
+
+
+}
 
 ;
 
-declarations:
-|  declarations TOKEN_INTIDENT TOKEN_IDENT
-|  declarations TOKEN_STRINGIDENT TOKEN_IDENT
-|  declarations TOKEN_DOUBLEIDENT TOKEN_IDENT
-|  declarations TOKEN_BOOLIDENT TOKEN_IDENT
+declarations: {$$ = kreirajCvor("declarations");}
+|  declarations declaration {dodajSina($$,$2);}
+
+declaration:
+    TOKEN_INTIDENT TOKEN_IDENT {
+        $$ = kreirajCvor("IntDeclaration");
+       
+        dodajSina($$, $1);
+        dodajSina($$, $2);
+    }
+|   TOKEN_STRINGIDENT TOKEN_IDENT {
+        $$ = kreirajCvor("StringDeclaration");
+      
+        dodajSina($$, $1);
+        dodajSina($$, $2);
+    }
+|   TOKEN_DOUBLEIDENT TOKEN_IDENT {
+        $$ = kreirajCvor("DoubleDeclaration");
+      
+        dodajSina($$, $1);
+        dodajSina($$, $2);
+    }
+|   TOKEN_BOOLIDENT TOKEN_IDENT {
+        $$ = kreirajCvor("BoolDeclaration");
+       
+        dodajSina($$, $1);
+        dodajSina($$, $2);
+    }
+;
 
 
-S: | S statInt      {}
-   | S statDouble   {}
-   | S statString   {}
-   | S statBool     {}
-   | S statWhile    {}
-   | S statBoolSC   {}
-   | S statIf       {}
-   | S statFor      {}
-   | S statFunc     {}
-   | S statWrite    {}
-   | S statRead     {}
+
+S:                                                                                      {$$ = kreirajCvor("statements");}
+| S statInt                                                                             {dodajSina($1,$2);}                                                                            
+   | S statDouble                                                                       {dodajSina($1,$2);}
+   | S statString                                                                       {dodajSina($1,$2);}
+   | S statBool                                                                         {}
+   | S statWhile                                                                        {}
+   | S statBoolSC                                                                       {}
+   | TOKEN_IF TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_THEN  S TOKEN_FI              {}
+   | TOKEN_IF TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_THEN S TOKEN_ELSE S TOKEN_FI  {}
+   | S statFor                                                                          {}
+   | S statFunc                                                                         {}
+   | S statWrite                                                                        {}
+   | S statRead                                                                         {}
    
 ;
 
 forLoopBody:
-|   statInt forLoopBody             {}
-|   statDouble forLoopBody          {}
-|   statBoolSC forLoopBody          {}
-|   statWhile forLoopBody           {}
-|   statIf forLoopBody              {}
-|   statFor forLoopBody             {}
-|   statWrite forLoopBody           {}
-|   statRead forLoopBody            {}
-|   statFunc forLoopBody            {}
-|   TOKEN_BREAK TOKEN_SC  S         {}
+|   statInt forLoopBody                                                                                     {}
+|   statDouble forLoopBody                                                                                  {}
+|   statBoolSC forLoopBody                                                                                  {}
+|   statWhile forLoopBody                                                                                   {}
+|   TOKEN_IF TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_THEN forLoopBody TOKEN_FI                          {}
+|   TOKEN_IF TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_THEN forLoopBody TOKEN_ELSE forLoopBody TOKEN_FI   {}
+|   statFor forLoopBody                                                                                     {}
+|   statWrite forLoopBody                                                                                   {}
+|   statRead forLoopBody                                                                                    {}
+|   statFunc forLoopBody                                                                                    {}
+|   TOKEN_BREAK TOKEN_SC                                                                                    {}
 ;
 
 
@@ -292,21 +246,16 @@ statBoolSC:
 |   TOKEN_IDENT TOKEN_EQ expressionBool TOKEN_SC    {}
 ;
 
-statIf:
-    TOKEN_IF TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_THEN S TOKEN_ELSE S TOKEN_FI {}
-|   TOKEN_IF TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_THEN S TOKEN_FI {}
-
-;
 
 
 
 statWhile:
 
-TOKEN_WHILE TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_DO forLoopBody TOKEN_END { printf("WHILE ( ... ) DO ... END");}
+TOKEN_WHILE TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_DO forLoopBody TOKEN_END {}
 ;
 
 statFor:
-TOKEN_FOR TOKEN_LEFTPAR statInt statBoolSC statInt TOKEN_RIGHTPAR TOKEN_DO forLoopBody TOKEN_END {printf("FOR ... TOKEN_DO ... TOKEN_END\n");}
+TOKEN_FOR TOKEN_LEFTPAR statInt statBoolSC statInt TOKEN_RIGHTPAR TOKEN_DO forLoopBody TOKEN_END {}
 ;
 
 expressionLE:
@@ -351,16 +300,28 @@ expressionISNOTEQ:
 
 
 statString:
-    TOKEN_IDENT TOKEN_EQ expressionString TOKEN_SC {}
+    TOKEN_IDENT TOKEN_EQ expressionString TOKEN_SC {$$ = kreirajCvor("stringAssignment");
+    dodajSina($$,$1);
+    dodajSina($$,$3);
+    }
 ;
 
 statInt: 
    
-TOKEN_IDENT TOKEN_EQ expressionInt TOKEN_SC { }
+TOKEN_IDENT TOKEN_EQ expressionInt TOKEN_SC {$$ = kreirajCvor("intAssignment");
+
+dodajSina($$,$1);
+dodajSina($$,$3);
+
+}
 ;
 
 
-statDouble: TOKEN_IDENT TOKEN_EQ expressionDouble TOKEN_SC {}  
+statDouble: TOKEN_IDENT TOKEN_EQ expressionDouble TOKEN_SC {$$ = kreirajCvor("doubleAssignment");
+dodajSina($$,$1);
+dodajSina($$,$3);
+
+}  
 ;
 
 expressionBool:
@@ -392,31 +353,31 @@ expressionBool:
 
 
 expressionString:
-    TOKEN_STRING {}
+    TOKEN_STRING {$$ = $1;}
 ;
 
 expressionDouble:
-     TOKEN_DOUBLE                                           {}
-    | expressionDouble TOKEN_PLUS expressionDouble          {}
-    | expressionDouble TOKEN_MINUS expressionDouble         {}
-    | expressionDouble TOKEN_MUL expressionDouble           {}
-    | expressionDouble TOKEN_DIV expressionDouble           {}
-    | TOKEN_LEFTPAR expressionDouble TOKEN_RIGHTPAR         {}
+     TOKEN_DOUBLE                                           {$$ = $1;}
+    | expressionDouble TOKEN_PLUS expressionDouble          {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+    | expressionDouble TOKEN_MINUS expressionDouble         {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+    | expressionDouble TOKEN_MUL expressionDouble           {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+    | expressionDouble TOKEN_DIV expressionDouble           {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+    | TOKEN_LEFTPAR expressionDouble TOKEN_RIGHTPAR         {$$ = $2;}
 ;
 
 
 
 expressionInt:
-    expressionInt TOKEN_AND expressionInt               {}
-    | expressionInt TOKEN_OR expressionInt              {}
-    | expressionInt TOKEN_PLUS expressionInt            {}
-    | expressionInt TOKEN_MINUS expressionInt           {}
-    | expressionInt TOKEN_MUL expressionInt             {}
-    | expressionInt TOKEN_DIV expressionInt             {}
-    | expressionInt TOKEN_MOD expressionInt             {}
-    | TOKEN_LEFTPAR expressionInt TOKEN_RIGHTPAR        {}
-    | TOKEN_INT                                         {}
-    | TOKEN_IDENT                                       {}
+    expressionInt TOKEN_AND expressionInt               {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+    | expressionInt TOKEN_OR expressionInt              {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+    | expressionInt TOKEN_PLUS expressionInt            {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+    | expressionInt TOKEN_MINUS expressionInt           {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+    | expressionInt TOKEN_MUL expressionInt             {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+    | expressionInt TOKEN_DIV expressionInt             {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+    | expressionInt TOKEN_MOD expressionInt             {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+    | TOKEN_LEFTPAR expressionInt TOKEN_RIGHTPAR        {$$ = $2;}
+    | TOKEN_INT                                         {$$ = $1;}
+    | TOKEN_IDENT                                       {$$ = $1;}
 ;  
 
 %%   
@@ -427,8 +388,48 @@ void yyerror(const char* s) {
 
 
 int main() {
-   
+
+    korijen = kreirajCvor("program");
     int rezultat = yyparse();
+
+
+    int cnt = 0;
+
+    bool kraj = false;
+
+
+    struct Red* red = malloc(sizeof(struct Red));
+    int nivo = 0;
+
+    inicijalizujRed(red);
+
+    dodajURed(red,korijen);
+    struct Cvor* tren = red->glava;
+
+    while(tren != 0) {
+        
+        struct Cvor* tmp = ukloniSPocetka(red);
+        
+        if(tmp->nivo > nivo) {
+            printf("\n%s ",tmp->vrijednost);
+            nivo++;
+            
+        }
+        else {
+            printf("%s ",tmp->vrijednost);
+        }
+        
+
+
+
+        int cnt = 0;
+        while(cnt < tmp->broj_sinova) {
+            tmp->sinovi[cnt]->nivo = tmp->nivo + 1;
+            dodajURed(red,tmp->sinovi[cnt]);
+            cnt++;
+        }
+    }
+  
 
   
 
