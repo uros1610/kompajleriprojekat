@@ -103,20 +103,16 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 112 "parser.y"
+#line 19 "parser.y"
  
 
-int int_value;
-char* str_value;
-double dbl_value;
-bool bool_value;
-char* ident;
+struct Cvor* CvorPokazivac;
 
 
 
 
 /* Line 1676 of yacc.c  */
-#line 120 "parser.tab.h"
+#line 116 "parser.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
