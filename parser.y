@@ -109,6 +109,10 @@ struct Cvor* CvorPokazivac;
 %type <CvorPokazivac>readStatements
 %type <CvorPokazivac>writeStatements
 %type <CvorPokazivac>writeStatement
+%type <CvorPokazivac> forLoopBody
+%type <CvorPokazivac> statFor
+%type <CvorPokazivac> statWhile
+%type <CvorPokazivac> statFunc
 
 
 
@@ -184,29 +188,30 @@ S:                                                                              
     | S statInt                                                                          {dodajSina($1,$2);}                                                                            
     | S statDouble                                                                       {dodajSina($1,$2);}
     | S statString                                                                       {dodajSina($1,$2);}
-    | S statWhile                                                                        {}
+    | S statWhile                                                                        {dodajSina($1,$2);}
     | S statBoolSC                                                                       {dodajSina($1,$2);}
-    | S TOKEN_IF TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_THEN S TOKEN_FI             {dodajSina($2,$4); dodajSina($2,$6); dodajSina($6,$7);  dodajSina($6,$8); dodajSina($1,$2);}
-    | S TOKEN_IF TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_THEN S TOKEN_ELSE S TOKEN_FI{dodajSina($2,$4); dodajSina($2,$6); dodajSina($6,$7);  dodajSina($6,$10); dodajSina($8,$9);  dodajSina($8,$10); dodajSina($1,$2); dodajSina($1,$8);}
-    | S statFor                                                                          {}
-    | S statFunc                                                                         {}
+    | S TOKEN_IF TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_THEN S TOKEN_FI             {dodajSina($2,$4); dodajSina($2,$6); dodajSina($6,$7);  dodajSina($6,$8); dodajSina($1,$2);} 
+    | S TOKEN_IF TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_THEN S TOKEN_ELSE S TOKEN_FI{dodajSina($2,$4); dodajSina($2,$6); dodajSina($6,$7);  dodajSina($6,$10); dodajSina($8,$9); dodajSina($2,$8); dodajSina($1,$2);}
+    | S statFor                                                                          {dodajSina($1,$2);}
+    | S statFunc                                                                         {dodajSina($1,$2);}
     | S statWrite                                                                        {dodajSina($1,$2);}
     | S statRead                                                                         {dodajSina($1,$2);}
    
 ;
 
-forLoopBody:
-|   statInt forLoopBody                                                                                     {}
-|   statDouble forLoopBody                                                                                  {}
-|   statBoolSC forLoopBody                                                                                  {}
-|   statWhile forLoopBody                                                                                   {}
-|   TOKEN_IF TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_THEN forLoopBody TOKEN_FI                          {}
-|   TOKEN_IF TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_THEN forLoopBody TOKEN_ELSE forLoopBody TOKEN_FI   {}
-|   statFor forLoopBody                                                                                     {}
-|   statWrite forLoopBody                                                                                   {}
-|   statRead forLoopBody                                                                                    {}
-|   statFunc forLoopBody                                                                                    {}
-|   TOKEN_BREAK TOKEN_SC                                                                                    {}
+forLoopBody: {$$ = kreirajCvor("forLoopBody");}
+|  forLoopBody   statInt                                                                                                {dodajSina($1,$2); $$ = $1;}
+|  forLoopBody   statDouble                                                                                             {dodajSina($1,$2); $$ = $1;}
+|  forLoopBody   statBoolSC                                                                                             {dodajSina($1,$2); $$ = $1;}
+|  forLoopBody   statWhile                                                                                              {dodajSina($1,$2); $$ = $1;}
+|  forLoopBody  TOKEN_IF TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_THEN forLoopBody TOKEN_FI                          {dodajSina($2,$4); dodajSina($2,$6); dodajSina($6,$7);  dodajSina($6,$8); dodajSina($1,$2);}  
+|  forLoopBody  TOKEN_IF TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_THEN forLoopBody TOKEN_ELSE forLoopBody TOKEN_FI   {dodajSina($2,$4); dodajSina($2,$6); dodajSina($6,$7);  dodajSina($6,$10); dodajSina($8,$9); dodajSina($2,$8); dodajSina($1,$2);}
+|  forLoopBody   statFor                                                                                                {dodajSina($1,$2); $$ = $1;}
+|  forLoopBody   statWrite                                                                                              {dodajSina($1,$2); $$ = $1;}
+|  forLoopBody   statRead                                                                                               {dodajSina($1,$2); $$ = $1;}
+|  forLoopBody   statFunc                                                                                               {dodajSina($1,$2); $$ = $1;}
+|  forLoopBody  TOKEN_BREAK TOKEN_SC                                                                                    {dodajSina($1,$2); $$ = $1;}
+|  forLoopBody  statString                                                                                              {dodajSina($1,$2); $$ = $1;}
 ;
 
 
@@ -215,10 +220,10 @@ statBool:
 ;
 
 statFunc:
-    TOKEN_INTIDENT TOKEN_IDENT TOKEN_LEFTPAR declarations TOKEN_RIGHTPAR TOKEN_DO S TOKEN_RETURN expressionInt TOKEN_SC {}
-    |TOKEN_DOUBLEIDENT TOKEN_IDENT  TOKEN_LEFTPAR declarations TOKEN_RIGHTPAR TOKEN_DO S TOKEN_RETURN expressionDouble TOKEN_SC
-    |TOKEN_STRINGIDENT TOKEN_IDENT  TOKEN_LEFTPAR declarations TOKEN_RIGHTPAR TOKEN_DO S TOKEN_RETURN expressionString TOKEN_SC
-    |TOKEN_BOOLIDENT TOKEN_IDENT  TOKEN_LEFTPAR declarations TOKEN_RIGHTPAR TOKEN_DO S TOKEN_RETURN expressionBool TOKEN_SC
+     TOKEN_INTIDENT TOKEN_IDENT TOKEN_LEFTPAR declarations TOKEN_RIGHTPAR TOKEN_DO S TOKEN_RETURN expressionInt TOKEN_SC {$$ = kreirajCvor("funcDeclaration"); dodajSina($$,$1); dodajSina($$,$2); dodajSina($$,$4); dodajSina($$,$6); dodajSina($6,$7); dodajSina($6,$8); dodajSina($6,$9);} 
+    |TOKEN_DOUBLEIDENT TOKEN_IDENT  TOKEN_LEFTPAR declarations TOKEN_RIGHTPAR TOKEN_DO S TOKEN_RETURN expressionDouble TOKEN_SC {$$ = kreirajCvor("funcDeclaration"); dodajSina($$,$1); dodajSina($$,$2); dodajSina($$,$4); dodajSina($$,$6); dodajSina($6,$7); dodajSina($6,$8); dodajSina($6,$9);} 
+    |TOKEN_STRINGIDENT TOKEN_IDENT  TOKEN_LEFTPAR declarations TOKEN_RIGHTPAR TOKEN_DO S TOKEN_RETURN expressionString TOKEN_SC {$$ = kreirajCvor("funcDeclaration"); dodajSina($$,$1); dodajSina($$,$2); dodajSina($$,$4); dodajSina($$,$6); dodajSina($6,$7); dodajSina($6,$8); dodajSina($6,$9);} 
+    |TOKEN_BOOLIDENT TOKEN_IDENT  TOKEN_LEFTPAR declarations TOKEN_RIGHTPAR TOKEN_DO S TOKEN_RETURN expressionBool TOKEN_SC {$$ = kreirajCvor("funcDeclaration"); dodajSina($$,$1); dodajSina($$,$2); dodajSina($$,$4); dodajSina($$,$6); dodajSina($6,$7); dodajSina($6,$8); dodajSina($6,$9);} 
 ;
 
 statWrite: 
@@ -248,12 +253,9 @@ readStatements: {$$ = kreirajCvor("readStatements");}
 
 
 statBoolSC:
-    TOKEN_IDENT TOKEN_EQ expressionBool TOKEN_SC    {$$ = kreirajCvor("boolAssignment");
+    expressionBool TOKEN_SC  {$$ = $1;}
+|   TOKEN_IDENT TOKEN_EQ expressionBool TOKEN_SC {$$ = kreirajCvor("boolAssignment"); dodajSina($$,$1); dodajSina($$,$3);}
 
-dodajSina($$,$1);
-dodajSina($$,$3);
-
-}
 ;
 
 
@@ -261,11 +263,11 @@ dodajSina($$,$3);
 
 statWhile:
 
-TOKEN_WHILE TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_DO forLoopBody TOKEN_END {}
+TOKEN_WHILE TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_DO forLoopBody TOKEN_END {$$ = $1; dodajSina($1,$3); dodajSina($1,$5); dodajSina($5,$6); dodajSina($1,$7);}
 ;
 
 statFor:
-TOKEN_FOR TOKEN_LEFTPAR statInt statBoolSC statInt TOKEN_RIGHTPAR TOKEN_DO forLoopBody TOKEN_END {}
+TOKEN_FOR TOKEN_LEFTPAR statInt statBoolSC statInt TOKEN_RIGHTPAR TOKEN_DO forLoopBody TOKEN_END {$$ = $1; dodajSina($1,$3); dodajSina($1,$4); dodajSina($1,$5);  dodajSina($1,$7); dodajSina($7,$8); dodajSina($1,$9);}
 ;
 
 expressionLE:
@@ -420,6 +422,8 @@ int main() {
     inicijalizujRed(red);
 
     dodajURed(red,korijen);
+
+    printf("Prvi nivo:\n");
    
 
     while(true) {
@@ -429,6 +433,7 @@ int main() {
         struct Cvor* tmp = ukloniSPocetka(red);
         
         if(tmp->nivo > nivo) {
+            printf("\n\n\n%d-ti Nivo:",tmp->nivo+1);
             printf("\n%s ",tmp->vrijednost);
             nivo++;
             
