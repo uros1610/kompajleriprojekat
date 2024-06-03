@@ -19,6 +19,12 @@ return noviCvor;
 
 void dodajSina(Cvor* roditelj,Cvor* sin) {
     roditelj->broj_sinova++;
+    Cvor* noviCvor = malloc(sizeof(struct Cvor));
+    noviCvor->vrijednost = strdup(sin->vrijednost);
+    noviCvor->nivo = sin->nivo;
+    noviCvor->sljedeci = sin->sljedeci;
+    noviCvor->sinovi = sin->sinovi;
+    noviCvor->broj_sinova = sin->broj_sinova; 
     roditelj->sinovi = realloc(roditelj->sinovi,(sizeof(Cvor)*roditelj->broj_sinova));
-    roditelj->sinovi[roditelj->broj_sinova-1] = sin;
+    roditelj->sinovi[roditelj->broj_sinova-1] = noviCvor;
 }
