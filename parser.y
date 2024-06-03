@@ -104,6 +104,15 @@ struct Cvor* CvorPokazivac;
 %type <CvorPokazivac>statBool
 %type <CvorPokazivac>statBoolSC
 
+%type <CvorPokazivac>statWrite
+%type <CvorPokazivac>statRead
+%type <CvorPokazivac>readStatements
+%type <CvorPokazivac>writeStatements
+%type <CvorPokazivac>writeStatement
+
+
+
+
 %type <CvorPokazivac> expressionLE
 %type <CvorPokazivac> expressionLEQ
 %type <CvorPokazivac> expressionGE
@@ -140,7 +149,7 @@ dodajSina(korijen,endSin);
 ;
 
 declarations: {$$ = kreirajCvor("declarations");}
-|  declarations declaration {dodajSina($$,$2);}
+|  declarations declaration {dodajSina($1,$2);}
 
 declaration:
     TOKEN_INTIDENT TOKEN_IDENT {
@@ -171,18 +180,18 @@ declaration:
 
 
 
-S:                                                                                      {$$ = kreirajCvor("statements");}
-| S statInt                                                                             {dodajSina($1,$2);}                                                                            
-   | S statDouble                                                                       {dodajSina($1,$2);}
-   | S statString                                                                       {dodajSina($1,$2);}
-   | S statWhile                                                                        {}
-   | S statBoolSC                                                                       {dodajSina($1,$2);}
-   | TOKEN_IF TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_THEN  S TOKEN_FI              {}
-   | TOKEN_IF TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_THEN S TOKEN_ELSE S TOKEN_FI  {}
-   | S statFor                                                                          {}
-   | S statFunc                                                                         {}
-   | S statWrite                                                                        {}
-   | S statRead                                                                         {}
+S:                                                                                       {$$ = kreirajCvor("statements");}
+    | S statInt                                                                          {dodajSina($1,$2);}                                                                            
+    | S statDouble                                                                       {dodajSina($1,$2);}
+    | S statString                                                                       {dodajSina($1,$2);}
+    | S statWhile                                                                        {}
+    | S statBoolSC                                                                       {dodajSina($1,$2);}
+    | S TOKEN_IF TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_THEN S TOKEN_FI             {dodajSina($2,$4); dodajSina($2,$6); dodajSina($6,$7);  dodajSina($6,$8); dodajSina($1,$2);}
+    | S TOKEN_IF TOKEN_LEFTPAR statBool TOKEN_RIGHTPAR TOKEN_THEN S TOKEN_ELSE S TOKEN_FI{dodajSina($2,$4); dodajSina($2,$6); dodajSina($6,$7);  dodajSina($6,$10); dodajSina($8,$9);  dodajSina($8,$10); dodajSina($1,$2); dodajSina($1,$8);}
+    | S statFor                                                                          {}
+    | S statFunc                                                                         {}
+    | S statWrite                                                                        {dodajSina($1,$2);}
+    | S statRead                                                                         {dodajSina($1,$2);}
    
 ;
 
@@ -212,29 +221,27 @@ statFunc:
     |TOKEN_BOOLIDENT TOKEN_IDENT  TOKEN_LEFTPAR declarations TOKEN_RIGHTPAR TOKEN_DO S TOKEN_RETURN expressionBool TOKEN_SC
 ;
 
-statWrite:
-     TOKEN_WRITE TOKEN_LEFTPAR statIdentsWrite TOKEN_SC
+statWrite: 
+    TOKEN_WRITE TOKEN_LEFTPAR writeStatements TOKEN_RIGHTPAR TOKEN_SC {$$ = $1; dodajSina($1,$3);}
 ;
 
+writeStatements:    {$$ = kreirajCvor("writeStatements");}
+|    writeStatements writeStatement     {$$ = $1; dodajSina($1,$2);}
+
+writeStatement:
+    expressionBool      {$$ = $1;}
+|   expressionDouble    {$$ = $1;}
+|   expressionInt       {$$ = $1;}
+|   expressionString    {$$ = $1;}
 
 statRead:
-       TOKEN_READ TOKEN_LEFTPAR statIdentsRead TOKEN_SC
+       TOKEN_READ TOKEN_LEFTPAR readStatements TOKEN_RIGHTPAR TOKEN_SC {$$ = $1; dodajSina($1,$3);}
 ;
 
-statIdentsWrite:
-      expressionInt TOKEN_RIGHTPAR
-    | expressionDouble TOKEN_RIGHTPAR
-    | expressionBool TOKEN_RIGHTPAR
-    | expressionString TOKEN_RIGHTPAR
-    | expressionInt TOKEN_RIGHTPAR TOKEN_COMMA statIdentsWrite
-    | expressionDouble TOKEN_RIGHTPAR TOKEN_COMMA statIdentsWrite
-    | expressionBool TOKEN_RIGHTPAR TOKEN_COMMA statIdentsWrite
-    | expressionString TOKEN_RIGHTPAR TOKEN_COMMA statIdentsWrite
-  
 
-statIdentsRead:
-      TOKEN_IDENT TOKEN_RIGHTPAR
-    | TOKEN_IDENT TOKEN_COMMA statIdentsRead
+
+readStatements: {$$ = kreirajCvor("readStatements");}
+    | readStatements TOKEN_IDENT  {$$ = $1; dodajSina($1,$2);}
 
 ;
 
@@ -343,14 +350,20 @@ expressionBool:
 | expressionLE                                                              {$$ = $1;}
 | expressionLEQ                                                             {$$ = $1;}
 | TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR                               {$$ = $2;}
-| expressionInt TOKEN_LE TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR        {$$ = $2; dodajSina($2,$1); dodajSina($2,$3); dodajSina($2,$4);}
-| expressionInt TOKEN_LEQ TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR       {$$ = $2; dodajSina($2,$1); dodajSina($2,$3); dodajSina($2,$4);}
-| expressionInt TOKEN_GE TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR        {$$ = $2; dodajSina($2,$1); dodajSina($2,$3); dodajSina($2,$4);}
-| expressionInt TOKEN_GEQ TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR       {$$ = $2; dodajSina($2,$1); dodajSina($2,$3); dodajSina($2,$4);}
-| expressionInt TOKEN_ISEQ TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR      {$$ = $2; dodajSina($2,$1); dodajSina($2,$3); dodajSina($2,$4);}
-| expressionInt TOKEN_ISNOTEQ TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR   {$$ = $2; dodajSina($2,$1); dodajSina($2,$3); dodajSina($2,$4);}
+| expressionInt TOKEN_LE TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR        {$$ = $2; dodajSina($2,$1);  dodajSina($2,$4);}
+| expressionInt TOKEN_LEQ TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR       {$$ = $2; dodajSina($2,$1);  dodajSina($2,$4);}
+| expressionInt TOKEN_GE TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR        {$$ = $2; dodajSina($2,$1);  dodajSina($2,$4);}
+| expressionInt TOKEN_GEQ TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR       {$$ = $2; dodajSina($2,$1);  dodajSina($2,$4);}
+| expressionInt TOKEN_ISEQ TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR      {$$ = $2; dodajSina($2,$1);  dodajSina($2,$4);}
+| expressionInt TOKEN_ISNOTEQ TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR   {$$ = $2; dodajSina($2,$1);  dodajSina($2,$4);}
+| expressionDouble TOKEN_LE TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR     {$$ = $2; dodajSina($2,$1);  dodajSina($2,$4);}
+| expressionDouble TOKEN_LEQ TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR    {$$ = $2; dodajSina($2,$1);  dodajSina($2,$4);}
+| expressionDouble TOKEN_GE TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR     {$$ = $2; dodajSina($2,$1);  dodajSina($2,$4);}
+| expressionDouble TOKEN_GEQ TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR    {$$ = $2; dodajSina($2,$1);  dodajSina($2,$4);}
+| expressionDouble TOKEN_ISEQ TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR   {$$ = $2; dodajSina($2,$1);  dodajSina($2,$4);}
+| expressionDouble TOKEN_ISNOTEQ TOKEN_LEFTPAR expressionBool TOKEN_RIGHTPAR{$$ = $2; dodajSina($2,$1);  dodajSina($2,$4);}
 | expressionBool TOKEN_AND expressionBool                                   {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
-| expressionBool TOKEN_OR expressionBool                                    {$$ = $2; dodajSina($2,$1); dodajSina($2,$3);}
+| expressionBool TOKEN_OR expressionBool                                    {$$ = $2; dodajSina($2,$1); dodajSina($2,$3)}
 
 ;
 
