@@ -1,0 +1,4 @@
+*.txt
+lex.yy.c
+parser.tab.c
+*.exe
