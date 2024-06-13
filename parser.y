@@ -346,7 +346,7 @@ TOKEN_WHILE TOKEN_LEFTPAR assignment TOKEN_RIGHTPAR TOKEN_DO forLoopBody TOKEN_E
 ;
 
 statFor:
-TOKEN_FOR TOKEN_LEFTPAR expression assignment TOKEN_SC expression TOKEN_RIGHTPAR TOKEN_DO forLoopBody TOKEN_END {$$ = $1; dodajSina($1,$3); dodajSina($1,$4); dodajSina($1,$5);  dodajSina($1,$7); dodajSina($7,$8); dodajSina($1,$9);}
+TOKEN_FOR TOKEN_LEFTPAR expression assignment TOKEN_SC expression TOKEN_RIGHTPAR TOKEN_DO forLoopBody TOKEN_END {$$ = $1; dodajSina($1,$3); dodajSina($1,$4); dodajSina($1,$6);  dodajSina($1,$7); dodajSina($7,$8); dodajSina($1,$9);}
 ;
 
 /*
