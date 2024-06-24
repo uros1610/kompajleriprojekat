@@ -45,7 +45,7 @@ int kolona = 1;
 "INTCONST"                          { Cvor* t = (Cvor*) kreirajCvor("INTCONST"); yylval.CvorPokazivac = t; kolona+=yyleng; return TOKEN_INTCONST;}
 "DOUBLECONST"                       { Cvor* t = (Cvor*) kreirajCvor("DOUBLECONST"); yylval.CvorPokazivac = t; kolona+=yyleng; return TOKEN_DOUBLECONST;}
 "BOOLCONST"                         { Cvor* t = (Cvor*) kreirajCvor("BOOLCONST"); yylval.CvorPokazivac = t; kolona+=yyleng; return TOKEN_BOOLCONST;}
-"STRINGCONST"                       { Cvor* t = (Cvor*) kreirajCvor("STRINGCONST"); yylval.CvorPokazivac = t; kolona+=yyleng; return TOKEN_STRINGCONST;}
+"STRCONST"                          { Cvor* t = (Cvor*) kreirajCvor("STRCONST"); yylval.CvorPokazivac = t; kolona+=yyleng; return TOKEN_STRCONST;}
 "DO"                                { Cvor* t = (Cvor*) kreirajCvor("DO"); yylval.CvorPokazivac = t; kolona+=yyleng; return TOKEN_DO;}
 "THEN"                              { Cvor* t = (Cvor*) kreirajCvor("THEN"); yylval.CvorPokazivac = t; kolona+=yyleng; return TOKEN_THEN;}
 
@@ -57,7 +57,7 @@ int kolona = 1;
 (0|(\-?[1-9][0-9]*))\.[0-9]*(E|e)\+[0-9]*   { Cvor* t = (Cvor*) kreirajCvor(yytext); yylval.CvorPokazivac = t; kolona+=yyleng; char* kraj;   return TOKEN_DOUBLE;} 
 (0|(\-?[1-9][0-9]*))\.[0-9]*(E|e)\-[0-9]*   { Cvor* t = (Cvor*) kreirajCvor(yytext); yylval.CvorPokazivac = t; kolona+=yyleng; char* kraj;  return TOKEN_DOUBLE;} 
 
-\"(.*\n+.*)+\"                              { kolona+=yyleng; int i = 0; while(i < yyleng) {if(yytext[i] == '\n') {red++; kolona = 1;} i++;} noviRedString(red,kolona,yytext);}
+\"([^\"]*\n+[^\"]*)+\"                              { kolona+=yyleng; int i = 0; while(i < yyleng) {if(yytext[i] == '\n') {red++; kolona = 1;} i++;} noviRedString(red,kolona,yytext);}
 \"[^\n\"]*                                  { kolona+=yyleng; nezatvorenString(red,kolona,yytext);}
 (0|([1-9][0-9]*))(E|e)\+[0-9]*              { kolona+=yyleng; bezTacke(red,kolona,yytext);}
 (0|([1-9][0-9]*))(E|e)\-[0-9]*              { kolona+=yyleng; bezTacke(red,kolona,yytext);}
