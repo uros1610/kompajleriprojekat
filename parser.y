@@ -33,6 +33,7 @@ void dodaj(char* id,int tip) {
 
 int nadji(char* id) {
     struct Promljenjiva* temp = glava;
+    
 
     while(temp != 0) {
         if(strcmp(temp->id,id) == 0) {
@@ -40,6 +41,7 @@ int nadji(char* id) {
         }
         temp = temp->sledeci;
     }
+
     return -1;
 }
 /*
@@ -124,7 +126,7 @@ struct Cvor* CvorPokazivac;
 %token<CvorPokazivac> TOKEN_FWSLASH
 %token<CvorPokazivac> TOKEN_FI
 %token<CvorPokazivac> TOKEN_INTCONST
-%token<CvorPokazivac> TOKEN_STRINGCONST
+%token<CvorPokazivac> TOKEN_STRCONST
 %token<CvorPokazivac> TOKEN_BOOLCONST
 %token<CvorPokazivac> TOKEN_DOUBLECONST
 %token<CvorPokazivac> TOKEN_DO
@@ -157,6 +159,7 @@ struct Cvor* CvorPokazivac;
 %type <CvorPokazivac> statFunc
 %type <CvorPokazivac> expression
 %type <CvorPokazivac> S
+%type <CvorPokazivac> constants
 
 %%
 
@@ -195,6 +198,8 @@ declaration:
         dodajSina($$, $1);
         dodajSina($$, $2);
         if(nadji($2->vrijednost) != -1) {
+            vecPostoji(red,kolona);
+
             exit(1);
         }
         dodaj($2->vrijednost,1);
@@ -206,6 +211,7 @@ declaration:
         dodajSina($$, $1);
         dodajSina($$, $2);
         if(nadji($2->vrijednost) != -1) {
+            vecPostoji(red,kolona);
             exit(1);
         }
         dodaj($2->vrijednost,3);
@@ -216,6 +222,8 @@ declaration:
         dodajSina($$, $1);
         dodajSina($$, $2);
         if(nadji($2->vrijednost) != -1) {
+             vecPostoji(red,kolona);
+
             exit(1);
         }
         dodaj($2->vrijednost,2);
@@ -228,6 +236,7 @@ declaration:
         dodajSina($$, $1);
         dodajSina($$, $2);
         if(nadji($2->vrijednost) != -1) {
+            vecPostoji(red,kolona);
             exit(1);
         }
         dodaj($2->vrijednost,0);
@@ -246,6 +255,7 @@ S:                                                                              
     | S statFunc                                                                         {dodajSina($1,$2);}
     | S statWrite                                                                        {dodajSina($1,$2);}
     | S statRead                                                                         {dodajSina($1,$2);}
+    | S constants                                                                        {dodajSina($1,$2);}
    
 ;
 
@@ -259,10 +269,19 @@ forLoopBody: {$$ = kreirajCvor("forLoopBody");}
 |  forLoopBody   statRead                                                                                               {dodajSina($1,$2); $$ = $1;}
 |  forLoopBody   statFunc                                                                                               {dodajSina($1,$2); $$ = $1;}
 |  forLoopBody  TOKEN_BREAK TOKEN_SC                                                                                    {dodajSina($1,$2); $$ = $1;}
+|  forLoopBody constants                                                                                                {dodajSina($1,$2); $$ = $1;}    
+;
+
+constants:
+        TOKEN_INTCONST TOKEN_IDENT TOKEN_EQ assignment TOKEN_SC {if(nadji($2->vrijednost)!= -1) {vecPostoji(red,kolona); exit(1);}dodaj($2->vrijednost,5); if($4->tip != 1 && $4->tip !=5) Nekompatabilni(red,kolona); $$ = kreirajCvor("ConstInt"); dodajSina($$,$3); dodajSina($3,$2); dodajSina($3,$4);}
+    |   TOKEN_DOUBLECONST TOKEN_IDENT TOKEN_EQ assignment TOKEN_SC {if(nadji($2->vrijednost)!= -1) {vecPostoji(red,kolona); exit(1);} dodaj($2->vrijednost,6); if($4->tip != 2 && $4->tip !=6) Nekompatabilni(red,kolona); $$ = kreirajCvor("ConstDouble"); dodajSina($$,$3); dodajSina($3,$2); dodajSina($3,$4);}
+    |   TOKEN_BOOLCONST TOKEN_IDENT TOKEN_EQ assignment TOKEN_SC {if(nadji($2->vrijednost)!= -1) {vecPostoji(red,kolona); exit(1);} dodaj($2->vrijednost,7); if($4->tip != 0 && $4->tip !=7) Nekompatabilni(red,kolona); $$ = kreirajCvor("ConstBool"); dodajSina($$,$3); dodajSina($3,$2); dodajSina($3,$4);}
+    |   TOKEN_STRCONST TOKEN_IDENT TOKEN_EQ assignment TOKEN_SC {if(nadji($2->vrijednost)!= -1) {vecPostoji(red,kolona); exit(1);} dodaj($2->vrijednost,8); if($4->tip != 3 && $4->tip !=8) Nekompatabilni(red,kolona); $$ = kreirajCvor("ConstString"); dodajSina($$,$3); dodajSina($3,$2); dodajSina($3,$4);}
+
 ;
 
 expression:
-    TOKEN_IDENT TOKEN_EQ assignment TOKEN_SC {if(nadji($1->vrijednost)!=$3->tip) {Nekompatabilni(red,kolona);}dodajSina($2,$1); dodajSina($2,$3); $$ = $2;}
+    TOKEN_IDENT TOKEN_EQ assignment TOKEN_SC {if(nadji($1->vrijednost) > 4) {konstGreska(red,kolona); exit(1); }if(nadji($1->vrijednost)!=$3->tip) {Nekompatabilni(red,kolona);}dodajSina($2,$1); dodajSina($2,$3); $$ = $2;}
 ;  
 
 assignment:
