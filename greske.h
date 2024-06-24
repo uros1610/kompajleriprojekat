@@ -15,6 +15,8 @@
  void nedefinisanIdent(int red, int kolona);
  void ponovnaDeklaracija(int red,int kolona);
  void Nekompatabilni(int red,int kolona);
+ void konstGreska(int red,int kolona);
+ void vecPostoji(int red, int kolona);
 
 
 #endif // GRESKE_H

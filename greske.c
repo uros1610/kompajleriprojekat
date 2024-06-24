@@ -40,16 +40,26 @@ void nezatvorenKomentar(int red, int kolona) {
 
 void nedefinisanIdent(int red,int kolona) {
     brojGresaka++;
-    printf("Nije definisan Identifikator na liniji %d karakter %d",red,kolona);
+    printf("Nije definisan Identifikator na liniji %d karakter %d\n",red,kolona);
 
 }
 
 void ponovnaDeklaracija(int red,int kolona) {
     brojGresaka++;
-    printf("Ponovna deklaracija na liniji %d karakter %d",red,kolona);
+    printf("Ponovna deklaracija na liniji %d karakter %d\n",red,kolona);
 }
 
 void Nekompatabilni(int red,int kolona) {
     brojGresaka++;
-    printf("Nekompatabilni tipovi na liniji %d karakter %d",red,kolona);
+    printf("Nekompatabilni tipovi na liniji %d karakter %d\n",red,kolona);
+}
+
+void konstGreska(int red, int kolona) {
+    brojGresaka++;
+    printf("Konstanti ne moze opet vrijednost da se dodijeli!\n");
+}
+
+void vecPostoji(int red, int kolona) {
+    brojGresaka++;
+    printf("Identifikator je vec definisan, linija %d karakter %d\n",red,kolona);
 }
