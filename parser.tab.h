@@ -88,7 +88,7 @@
      TOKEN_FWSLASH = 304,
      TOKEN_FI = 305,
      TOKEN_INTCONST = 306,
-     TOKEN_STRINGCONST = 307,
+     TOKEN_STRCONST = 307,
      TOKEN_BOOLCONST = 308,
      TOKEN_DOUBLECONST = 309,
      TOKEN_DO = 310,
@@ -103,7 +103,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 70 "parser.y"
+#line 72 "parser.y"
  
 
 struct Cvor* CvorPokazivac;
