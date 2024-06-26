@@ -311,10 +311,10 @@ assignment:
 
 
 statFunc:
-     TOKEN_INTIDENT TOKEN_IDENT TOKEN_LEFTPAR declarations TOKEN_RIGHTPAR TOKEN_DO S TOKEN_RETURN assignment TOKEN_SC {$$ = kreirajCvor("funcDeclaration"); dodajSina($$,$1); dodajSina($$,$2); dodajSina($$,$4); dodajSina($$,$6); dodajSina($6,$7); dodajSina($6,$8); dodajSina($6,$9);} 
-    |TOKEN_DOUBLEIDENT TOKEN_IDENT  TOKEN_LEFTPAR declarations TOKEN_RIGHTPAR TOKEN_DO S TOKEN_RETURN assignment TOKEN_SC {$$ = kreirajCvor("funcDeclaration"); dodajSina($$,$1); dodajSina($$,$2); dodajSina($$,$4); dodajSina($$,$6); dodajSina($6,$7); dodajSina($6,$8); dodajSina($6,$9);} 
-    |TOKEN_STRINGIDENT TOKEN_IDENT  TOKEN_LEFTPAR declarations TOKEN_RIGHTPAR TOKEN_DO S TOKEN_RETURN assignment TOKEN_SC {$$ = kreirajCvor("funcDeclaration"); dodajSina($$,$1); dodajSina($$,$2); dodajSina($$,$4); dodajSina($$,$6); dodajSina($6,$7); dodajSina($6,$8); dodajSina($6,$9);} 
-    |TOKEN_BOOLIDENT TOKEN_IDENT  TOKEN_LEFTPAR declarations TOKEN_RIGHTPAR TOKEN_DO S TOKEN_RETURN assignment TOKEN_SC {$$ = kreirajCvor("funcDeclaration"); dodajSina($$,$1); dodajSina($$,$2); dodajSina($$,$4); dodajSina($$,$6); dodajSina($6,$7); dodajSina($6,$8); dodajSina($6,$9);} 
+     TOKEN_INTIDENT TOKEN_IDENT TOKEN_LEFTPAR declarations TOKEN_RIGHTPAR TOKEN_DO S TOKEN_RETURN assignment TOKEN_SC { if(nadji($2->vrijednost) != -1) vecPostoji(red,kolona); $$ = kreirajCvor("funcDeclaration"); if($9->tip != 1) Nekompatabilni(red,kolona); dodaj($2->vrijednost,1); dodajSina($$,$1); dodajSina($$,$2); dodajSina($$,$4); dodajSina($$,$6); dodajSina($6,$7); dodajSina($6,$8); dodajSina($8,$9);} 
+    |TOKEN_DOUBLEIDENT TOKEN_IDENT  TOKEN_LEFTPAR declarations TOKEN_RIGHTPAR TOKEN_DO S TOKEN_RETURN assignment TOKEN_SC {$$ = kreirajCvor("funcDeclaration"); if($9->tip != 2) Nekompatabilni(red,kolona); if(nadji($2->vrijednost) != -1) vecPostoji(red,kolona);dodaj($2->vrijednost,2);  dodajSina($$,$1); dodajSina($$,$2); dodajSina($$,$4); dodajSina($$,$6); dodajSina($6,$7); dodajSina($6,$8); dodajSina($8,$9);} 
+    |TOKEN_STRINGIDENT TOKEN_IDENT  TOKEN_LEFTPAR declarations TOKEN_RIGHTPAR TOKEN_DO S TOKEN_RETURN assignment TOKEN_SC {$$ = kreirajCvor("funcDeclaration"); if($9->tip != 3) Nekompatabilni(red,kolona); if(nadji($2->vrijednost) != -1) vecPostoji(red,kolona);dodaj($2->vrijednost,3);  dodajSina($$,$1); dodajSina($$,$2); dodajSina($$,$4); dodajSina($$,$6); dodajSina($6,$7); dodajSina($6,$8); dodajSina($8,$9);} 
+    |TOKEN_BOOLIDENT TOKEN_IDENT  TOKEN_LEFTPAR declarations TOKEN_RIGHTPAR TOKEN_DO S TOKEN_RETURN assignment TOKEN_SC {$$ = kreirajCvor("funcDeclaration"); if($9->tip != 0) Nekompatabilni(red,kolona); if(nadji($2->vrijednost) != -1) vecPostoji(red,kolona);dodaj($2->vrijednost,0);  dodajSina($$,$1); dodajSina($$,$2); dodajSina($$,$4); dodajSina($$,$6); dodajSina($6,$7); dodajSina($6,$8); dodajSina($8,$9);} 
 ;
 
 statWrite: 
